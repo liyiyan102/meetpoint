@@ -1,0 +1,111 @@
+<!-- 加入碰头中间页（客态从分享链接进入） -->
+<view class="page">
+  <view style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 顶部导航栏：返回首页按钮 -->
+  <view class="join-navbar">
+    <view class="join-navbar-back" hover-class="join-navbar-back-hover" bindtap="onBackHome">
+      <text class="join-navbar-back-arrow">‹</text>
+    </view>
+  </view>
+
+  <view class="join-center">
+    <!-- 发起人头像 / 品牌图标 -->
+    <view class="join-icon-wrap" wx:if="{{!creatorAvatar}}">
+      <text class="join-icon-text">碰</text>
+    </view>
+    <view class="join-creator-avatar-wrap" wx:if="{{creatorAvatar}}">
+      <image class="join-creator-avatar" src="{{creatorAvatar}}" mode="aspectFill"></image>
+    </view>
+
+    <!-- 动态主标题 -->
+    <view class="join-title">{{creatorName ? creatorName + '邀请你碰头' : '你收到了碰头邀请'}}</view>
+
+    <!-- 碰面地点卡片（有地点时显示） -->
+    <view class="poi-card-mini" wx:if="{{poiName}}">
+      <image class="poi-card-icon" src="/images/icons/icon-pin.svg" mode="aspectFit"></image>
+      <text class="poi-card-name">{{poiName}}</text>
+      <text class="poi-card-distance" wx:if="{{poiDistance}}">{{poiDistance}}</text>
+    </view>
+
+    <!-- 动态副标题 -->
+    <view class="join-subtitle">{{poiName ? '路线已规划好，一键导航' : '一起选最佳碰面地点，自动规划每个人的路线'}}</view>
+
+    <!-- 碰头信息卡片 -->
+    <view class="card invite-card">
+      <!-- 参与人头像组 -->
+      <view class="invite-avatars" wx:if="{{memberAvatarList.length > 0}}">
+        <view class="invite-avatar" wx:for="{{memberAvatarList}}" wx:key="index" wx:if="{{index < 5}}" style="margin-left:{{index === 0 ? '0' : '-16rpx'}};z-index:{{10-index}}">
+          <image wx:if="{{item.url}}" class="invite-avatar-img" src="{{item.url}}" mode="aspectFill"></image>
+          <text wx:else class="invite-avatar-text">{{item.text}}</text>
+        </view>
+        <view class="invite-avatar invite-avatar-more" wx:if="{{memberCount > 5}}" style="margin-left:-16rpx">
+          <text>+{{memberCount - 5}}</text>
+        </view>
+      </view>
+
+      <view class="invite-row" wx:if="{{creatorName}}">
+        <text class="invite-label">发起人</text>
+        <text class="invite-name">{{creatorName}}</text>
+      </view>
+      <view class="invite-row">
+        <text class="invite-label">已参与</text>
+        <text class="invite-name">{{memberCount}}人</text>
+      </view>
+      <view class="invite-row" wx:if="{{timeAgo}}">
+        <text class="invite-label">发起时间</text>
+        <text class="invite-name">{{timeAgo}}</text>
+      </view>
+    </view>
+
+    <!-- 当有头像无昵称时：就地显示原生 nickname 输入框 -->
+    <view class="join-nickname-box" wx:if="{{!isAlreadyMember && avatarUrl && !nickname}}">
+      <image class="join-nickname-avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <input
+        class="join-nickname-input"
+        type="nickname"
+        placeholder="输入你的昵称"
+        placeholder-class="join-nickname-placeholder"
+        value="{{nickname}}"
+        focus="{{nicknameFocus}}"
+        bindinput="onNicknameInput"
+        bindblur="onNicknameBlur"
+      />
+    </view>
+
+    <!-- CTA 按钮 -->
+    <!-- 已加入：返回碰头 -->
+    <button class="btn-primary btn-join" wx:if="{{isAlreadyMember}}" bindtap="onEnterMeeting">
+      返回碰头
+    </button>
+    <!-- 未授权 & 无头像：按钮本身 = chooseAvatar -->
+    <button
+      wx:elif="{{!avatarUrl}}"
+      class="btn-primary btn-join"
+      open-type="chooseAvatar"
+      bindchooseavatar="onJoinChooseAvatar">
+      加入碰头
+    </button>
+    <!-- 有头像但无昵称：提示设置昵称 -->
+    <button
+      wx:elif="{{!nickname}}"
+      class="btn-primary btn-join btn-join-hint"
+      bindtap="onJoinNeedNickname">
+      请先设置昵称
+    </button>
+    <!-- 已授权：正常加入 -->
+    <button
+      wx:else
+      class="btn-primary btn-join"
+      bindtap="onJoin">
+      加入碰头
+    </button>
+
+    <view class="conflict-hint" wx:if="{{hasConflict && !isAlreadyMember}}">
+      <image class="icon-xs-sm" src="/images/icons/icon-warning.svg" mode="aspectFit"></image> 你有进行中的碰头，加入后将自动退出原碰头
+    </view>
+
+    <view class="join-footer">{{!avatarUrl ? '点按钮先选个头像，才能加入碰头' : (!nickname ? '头像已设置，请输入昵称后点加入' : '加入后需授权定位开启位置共享')}}</view>
+  </view>
+
+</view>

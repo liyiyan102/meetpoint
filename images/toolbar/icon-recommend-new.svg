@@ -1,0 +1,29 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 雷达渐变：从右侧（扫描前沿，深蓝）渐变到左侧（扫描尾迹，透明） -->
+    <linearGradient id="radarGrad" x1="100%" y1="50%" x2="0%" y2="50%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 扇形雷达区域（带扫射渐变） -->
+  <path d="M24 40 L8.44 24.44 A22 22 0 0 1 39.56 24.44 Z" fill="url(#radarGrad)"/>
+  
+  <!-- 雷达的外边缘弧线，勾勒出范围 -->
+  <path d="M8.44 24.44 A22 22 0 0 1 39.56 24.44" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 雷达的扫描线：右侧前沿线条清晰 -->
+  <line x1="24" y1="40" x2="39.56" y2="24.44" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  <!-- 雷达的扫描线：左侧后沿线条虚化 -->
+  <line x1="24" y1="40" x2="8.44" y2="24.44" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.2" stroke-linecap="round"/>
+  
+  <!-- 雷达内圈辅助线 (模拟雷达波纹) -->
+  <path d="M14.1 30.1 A14 14 0 0 1 33.9 30.1" stroke="#3B82F6" stroke-width="1" stroke-opacity="0.4" stroke-dasharray="2 2"/>
+
+  <!-- 底部雷达基准圆点 -->
+  <circle cx="24" cy="40" r="3" fill="#3B82F6"/>
+
+  <!-- 小星星：表意“推荐/高亮/精选”，放置在雷达扫描的高亮区（右侧）上方 -->
+  <path d="M35 8 L36.5 12.5 L41 13 L37.5 16 L38.5 20.5 L35 18 L31.5 20.5 L32.5 16 L29 13 L33.5 12.5 Z" fill="#FBBF24"/>
+</svg>

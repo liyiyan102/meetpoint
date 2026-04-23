@@ -1,0 +1,413 @@
+<!-- 地图主页：碰头核心交互 -->
+<view class="page-map">
+
+  <!-- 地图 -->
+  <map
+    id="mainMap"
+    class="full-map"
+    longitude="{{mapCenter.longitude}}"
+    latitude="{{mapCenter.latitude}}"
+    scale="{{mapScale}}"
+    markers="{{markers}}"
+    polyline="{{polylines}}"
+    show-location="{{true}}"
+    enable-3D="{{false}}"
+    show-compass="{{true}}"
+    enable-overlooking="{{false}}"
+    setting="{{mapSetting}}"
+    bindmarkertap="onMarkerTap"
+    bindtap="onMapTap"
+    bindlongtap="onMapLongTap"
+    bindpoitap="onPoiTap"
+  ></map>
+
+  <!-- ========== 顶部：碰面状态栏（meet-bar 药丸，与胶囊同行同高） ========== -->
+  <view
+    class="meet-bar"
+    style="top: {{capsuleTop}}px; height: {{capsuleHeight}}px;"
+  >
+    <view class="mb-back" bindtap="onBack">‹</view>
+    <view class="mb-dot"></view>
+    <text class="mb-title">碰头中</text>
+    <view class="mb-divider"></view>
+    <view class="mb-users" bindlongtap="onToggleTestTool">
+      <image class="mb-users-icon" src="/images/toolbar/icon-users.svg" mode="aspectFit"></image>
+      <text class="mb-users-count">{{memberCount}}</text>
+    </view>
+  </view>
+
+  <!-- ========== 右侧工具栏（toolbox，紧贴胶囊正下方） ========== -->
+  <view
+    class="toolbox"
+    style="top: {{toolbarTop}}px; right: {{capsuleRight}}px;"
+  >
+    <view class="tb-item" hover-class="tb-item-hover" bindtap="onRelocate">
+      <image class="tb-icon" src="/images/toolbar/icon-location.svg" mode="aspectFit"></image>
+      <text class="tb-text">定位</text>
+    </view>
+    <view class="tb-divider"></view>
+    <view class="tb-item" hover-class="tb-item-hover" bindtap="onToggleAddFriend">
+      <image class="tb-icon" src="/images/toolbar/icon-add-friend.svg" mode="aspectFit"></image>
+      <text class="tb-text">添加</text>
+    </view>
+    <view class="tb-divider"></view>
+    <view class="tb-item" hover-class="tb-item-hover" bindtap="onToggleRecommend">
+      <image class="tb-icon" src="/images/toolbar/icon-recommend-new.svg" mode="aspectFit"></image>
+      <text class="tb-text">推荐</text>
+    </view>
+  </view>
+
+  <!-- ========== 底部：碰面地点浮动卡片 ========== -->
+  <view class="meet-card" wx:if="{{meetPoint}}" bindtap="onMeetPointBarTap">
+    <view class="mc-left">
+      <image class="mc-icon" src="/images/icons/icon-location-pin.svg" mode="aspectFit"></image>
+      <view class="mc-info">
+        <text class="mc-label">碰头地点</text>
+        <text class="mc-name">{{meetPoint.name}}</text>
+      </view>
+    </view>
+    <view class="mc-arrow">
+      <text class="mc-arrow-text">›</text>
+    </view>
+  </view>
+
+  <!-- Toast提示 -->
+  <view class="toast-bar" wx:if="{{toastText}}">{{toastText}}</view>
+
+  <!-- ========== 添加好友位置面板 ========== -->
+  <view class="panel-mask" wx:if="{{showAddFriend && !addFriendCollapsed}}" bindtap="onClosePanel"></view>
+  <view class="panel {{addFriendCollapsed ? 'panel-mini' : ''}}" wx:if="{{showAddFriend}}" catchtouchmove="onPanelPrevent" bindtouchstart="onPanelTouchStart" bindtouchend="onPanelTouchEnd">
+    <view class="panel-handle"></view>
+    <!-- 缩小态 -->
+    <view class="panel-mini-bar" wx:if="{{addFriendCollapsed}}" bindtap="onExpandAddFriend">
+      <text class="panel-mini-title">添加好友位置</text>
+      <view class="panel-mini-actions">
+        <view class="panel-expand-btn" catchtap="onExpandAddFriend"><text class="collapse-icon">▲</text></view>
+        <view class="panel-close" catchtap="onClosePanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+    </view>
+    <!-- 展开态 -->
+    <view wx:if="{{!addFriendCollapsed}}">
+    <view class="panel-head-row">
+      <text class="panel-title">添加好友</text>
+      <view class="panel-close" bindtap="onClosePanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+    </view>
+
+    <!-- ========== 主推：邀请好友加入（蓝色一体卡片，整块可点） ========== -->
+    <button class="invite-section-btn" open-type="share" hover-class="invite-section-btn-hover">
+      <view class="invite-section">
+        <view class="invite-icon-circle">
+          <text class="invite-icon-plus">+</text>
+        </view>
+        <view class="invite-section-texts">
+          <text class="invite-section-title">邀请好友加入碰头</text>
+          <text class="invite-section-desc">分享给好友，TA 点击即可加入碰头</text>
+        </view>
+      </view>
+    </button>
+
+    <!-- ========== 次要：手动标记好友位置（常驻浅灰卡片） ========== -->
+    <view class="manual-section">
+      <text class="manual-section-title">手动标记好友位置</text>
+
+      <!-- 好友昵称输入 -->
+      <input
+        class="manual-input manual-input-full"
+        placeholder="输入好友昵称"
+        value="{{friendName}}"
+        bindinput="onFriendNameInput"
+      />
+
+      <!-- 搜索框 + 搜索按钮 -->
+      <view class="manual-input-group">
+        <input
+          class="manual-input manual-input-flex"
+          placeholder="搜索地点或地图点选"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <view class="manual-search-btn" hover-class="manual-search-btn-hover" bindtap="onSearchConfirm">搜索</view>
+      </view>
+
+      <!-- 搜索结果 -->
+      <view class="search-results-wrap" wx:if="{{searchResults.length > 0}}">
+        <view
+          class="search-item"
+          wx:for="{{searchResults}}"
+          wx:key="id"
+          catchtap="onPickSearchResult"
+          data-index="{{index}}"
+        >
+          <text class="si-name">{{item.name}}</text>
+          <text class="si-addr">{{item.address}}</text>
+        </view>
+      </view>
+
+      <!-- 已选位置 & 确认按钮 -->
+      <view class="friend-confirm-row" wx:if="{{pickedLocation}}">
+        <view class="fn-label"><image class="icon-xs-sm" src="/images/icons/icon-pin.svg" mode="aspectFit"></image> 位置：{{pickedLocation.name}}</view>
+        <button class="btn-green btn-sm" bindtap="onConfirmAddFriend">确认添加</button>
+      </view>
+    </view>
+    </view>
+  </view>
+
+  <!-- ========== 碰头地点推荐面板（半屏可下拉，支持下滑最小化，无遮罩层） ========== -->
+  <view class="panel-recommend-wrap {{recommendCollapsed ? 'panel-recommend-collapsed' : ''}}" wx:if="{{showRecommend}}" bindtouchstart="onPanelTouchStart" bindtouchend="onRecommendTouchEnd">
+    <!-- 可拖动手柄区域 -->
+    <view class="panel-handle-bar">
+      <view class="panel-handle"></view>
+    </view>
+
+    <!-- 缩小态：只显示标题和展开/关闭按钮 -->
+    <view class="panel-mini-bar" wx:if="{{recommendCollapsed}}" bindtap="onExpandRecommend">
+      <text class="panel-mini-title">推荐碰头地点{{recommendList.length > 0 ? '（' + recommendList.length + '个）' : ''}}</text>
+      <view class="panel-mini-actions">
+        <view class="panel-expand-btn" catchtap="onExpandRecommend"><text class="collapse-icon">▲</text></view>
+        <view class="panel-close" catchtap="onCloseRecommend"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+    </view>
+
+    <!-- 展开态 -->
+    <view wx:if="{{!recommendCollapsed}}">
+      <view class="panel-head-row">
+        <text class="panel-title">推荐碰头地点</text>
+        <view class="panel-close" bindtap="onCloseRecommend"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+
+      <!-- 类型标签 -->
+      <scroll-view scroll-x class="type-scroll">
+        <view class="type-tags">
+          <view
+            class="type-tag {{selectedType === item.id ? 'type-tag-active' : ''}}"
+            wx:for="{{placeTypes}}"
+            wx:key="id"
+            bindtap="onSelectType"
+            data-id="{{item.id}}"
+          >
+            <image class="cat-icon" wx:if="{{item.iconPath}}" src="{{item.iconPath}}" mode="aspectFit"></image>
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <!-- 推荐列表 -->
+      <view class="loading-hint" wx:if="{{recommendLoading}}">正在搜索附近好去处...</view>
+      <scroll-view scroll-y class="recommend-list-wrap" wx:if="{{recommendList.length > 0}}">
+        <view
+          class="rec-item"
+          wx:for="{{recommendList}}"
+          wx:key="id"
+          catchtap="onRecItemTap"
+          data-index="{{index}}"
+        >
+          <view class="rec-rank">{{index + 1}}</view>
+          <view class="rec-info">
+            <view class="rec-name">{{item.name}}</view>
+            <view class="rec-meta">
+              <text class="rec-type" wx:if="{{item.displayType}}">{{item.displayType}}</text>
+              <text class="rec-rating" wx:if="{{item.rating}}"><image class="icon-xs" src="/images/icons/icon-star.svg" mode="aspectFit"></image> {{item.rating}}</text>
+              <text class="rec-dist">{{item.distanceText}}</text>
+            </view>
+            <view class="rec-addr">{{item.address}}</view>
+          </view>
+          <view class="rec-action">
+            <view class="btn-set-meet" catchtap="onSetMeetFromList" data-index="{{index}}">
+              选为碰头点
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="empty-hint" wx:if="{{!recommendLoading && recommendList.length === 0 && selectedType}}">
+        附近暂未找到合适地点，换个类型试试
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 用户面板（点击人物marker） ========== -->
+  <view class="panel-mask" wx:if="{{showUserPanel && !userPanelCollapsed}}" bindtap="onCloseUserPanel"></view>
+  <view class="panel panel-user {{userPanelCollapsed ? 'panel-mini' : ''}}" wx:if="{{showUserPanel}}" catchtouchmove="onPanelPrevent" bindtouchstart="onPanelTouchStart" bindtouchend="onPanelTouchEnd">
+    <view class="panel-handle"></view>
+    <!-- 缩小态：只显示名称和展开/关闭按钮 -->
+    <view class="panel-mini-bar" wx:if="{{userPanelCollapsed}}" bindtap="onExpandUserPanel">
+      <text class="panel-mini-title">{{panelUser.name}}</text>
+      <view class="panel-mini-actions">
+        <view class="panel-expand-btn" catchtap="onExpandUserPanel"><text class="collapse-icon">▲</text></view>
+        <view class="panel-close" catchtap="onCloseUserPanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+    </view>
+    <!-- 展开态 -->
+    <view wx:if="{{!userPanelCollapsed}}">
+      <view class="up-close-row">
+        <view style="flex:1;"></view>
+        <view class="panel-close" bindtap="onCloseUserPanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+      <view class="user-panel-content">
+      <!-- 头像区域：带状态指示圈 -->
+      <view class="up-avatar-wrap {{!panelUser.isOnline && !panelUser.isSelf && !panelUser.isManual ? 'up-avatar-wrap-offline' : ''}}" wx:if="{{!panelUser.isManual}}">
+        <image
+          class="up-avatar {{panelUser.isSelf ? 'up-avatar-self' : (panelUser.isOnline ? 'up-avatar-online' : 'up-avatar-offline')}}"
+          src="{{panelUser.avatarUrl || defaultAvatar}}"
+          mode="aspectFill"
+        ></image>
+        <!-- 在线/离线小圆点 -->
+        <view class="up-status-dot {{panelUser.isOnline ? 'up-dot-online' : 'up-dot-offline'}}"></view>
+      </view>
+      <!-- 手动好友头像 -->
+      <view class="up-avatar-wrap" wx:if="{{panelUser.isManual}}">
+        <image
+          class="up-avatar up-avatar-manual"
+          src="/images/avatar-default@2x.png"
+          mode="aspectFill"
+        ></image>
+      </view>
+      <view class="up-info">
+        <view class="up-name-row">
+          <text class="up-name">{{panelUser.name}}</text>
+          <text class="up-tag tag tag-blue" wx:if="{{panelUser.isSelf}}">自己</text>
+          <text class="up-tag tag tag-gray" wx:if="{{panelUser.isManual}}">手动添加</text>
+        </view>
+        <view class="up-location"><image class="icon-xs-sm" src="/images/icons/icon-pin.svg" mode="aspectFit"></image> {{panelUser.locationName || '定位中...'}}</view>
+        <!-- 在线/离线状态文字 -->
+        <view class="up-status-row" wx:if="{{!panelUser.isManual}}">
+          <view class="up-status-indicator {{panelUser.isOnline ? 'up-ind-online' : 'up-ind-offline'}}"></view>
+          <text class="up-status-text {{panelUser.isOnline ? 'up-text-online' : 'up-text-offline'}}">{{panelUser.isOnline ? '在线' : '离线'}}</text>
+          <text class="up-offline-time" wx:if="{{!panelUser.isOnline && panelUser.offlineTime}}"> · {{panelUser.offlineTime}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="panel-actions">
+      <button class="btn-green btn-sm" bindtap="onNavToUser"><image class="btn-icon-sm" src="/images/icons/icon-navigate.svg" mode="aspectFit"></image> 导航到 TA</button>
+      <button class="btn-sm btn-del" wx:if="{{panelUser.isManual}}" bindtap="onDeleteManualFriend"><image class="btn-icon-sm" src="/images/icons/icon-delete.svg" mode="aspectFit"></image> 删除</button>
+    </view>
+    </view>
+  </view>
+  <view class="panel-mask" wx:if="{{showPlacePanel && !placePanelCollapsed}}" bindtap="onClosePlacePanel"></view>
+  <view class="panel panel-place {{placePanelCollapsed ? 'panel-mini' : ''}}" wx:if="{{showPlacePanel}}" catchtouchmove="onPanelPrevent" bindtouchstart="onPanelTouchStart" bindtouchend="onPanelTouchEnd">
+    <view class="panel-handle"></view>
+    <!-- 缩小态 -->
+    <view class="panel-mini-bar" wx:if="{{placePanelCollapsed}}" bindtap="onExpandPlacePanel">
+      <text class="panel-mini-title">{{panelPlace.name}}</text>
+      <view class="panel-mini-actions">
+        <view class="panel-expand-btn" catchtap="onExpandPlacePanel"><text class="collapse-icon">▲</text></view>
+        <view class="panel-close" catchtap="onClosePlacePanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+      </view>
+    </view>
+    <!-- 展开态 -->
+    <view wx:if="{{!placePanelCollapsed}}">
+    <view class="panel-head-row">
+      <view class="pp-header" style="flex:1;">
+        <text class="pp-name">{{panelPlace.name}}</text>
+        <view class="pp-type-row">
+          <text class="pp-rating" wx:if="{{panelPlace.rating}}"><image class="icon-xs" src="/images/icons/icon-star.svg" mode="aspectFit"></image> {{panelPlace.rating}}</text>
+        </view>
+      </view>
+      <view class="panel-close" bindtap="onClosePlacePanel"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+    </view>
+      <view class="pp-detail">
+        <view class="pp-row" wx:if="{{panelPlace.address}}">
+          <view class="pp-label"><image class="icon-xs-sm" src="/images/icons/icon-pin.svg" mode="aspectFit"></image> 地址</view>
+          <text class="pp-value">{{panelPlace.address}}</text>
+        </view>
+        <view class="pp-row" wx:if="{{panelPlace.tel}}">
+          <view class="pp-label"><image class="icon-xs-sm" src="/images/icons/icon-phone.svg" mode="aspectFit"></image> 电话</view>
+          <text class="pp-value pp-tel" bindtap="onCallPlace">{{panelPlace.tel}}</text>
+        </view>
+      </view>
+      <!-- POI图片 -->
+      <scroll-view scroll-x class="pp-photos" wx:if="{{panelPlace.photos && panelPlace.photos.length > 0}}">
+        <image
+          wx:for="{{panelPlace.photos}}"
+          wx:key="*this"
+          src="{{item}}"
+          class="pp-photo"
+          mode="aspectFill"
+        ></image>
+      </scroll-view>
+    <view class="panel-actions">
+      <button class="btn-green btn-sm" bindtap="onNavToPlace"><image class="btn-icon-sm" src="/images/icons/icon-navigate.svg" mode="aspectFit"></image> 导航</button>
+      <button class="btn-sm btn-set" bindtap="onSetMeetPoint" wx:if="{{!panelPlace.isMeetPoint}}">
+        <image class="btn-icon-sm" src="/images/icons/icon-pin.svg" mode="aspectFit"></image>
+        <text>设为碰头地点</text>
+      </button>
+      <button class="btn-sm btn-del" bindtap="onRemoveMeetPoint" wx:if="{{panelPlace.isMeetPoint}}">
+        <image class="btn-icon-sm" src="/images/icons/icon-delete.svg" mode="aspectFit"></image> 取消碰头地点
+      </button>
+    </view>
+
+    <!-- 设为好友位置 -->
+    <view class="pp-friend-section">
+      <view class="pp-friend-row">
+        <input
+          class="pp-friend-input"
+          placeholder="输入好友名称"
+          value="{{placeFriendName}}"
+          bindinput="onPlaceFriendNameInput"
+        />
+        <button class="btn-sm btn-friend-add" bindtap="onSetPlaceAsFriend"><image class="btn-icon-sm" src="/images/icons/icon-add-friend.svg" mode="aspectFit"></image> 设为好友位置</button>
+      </view>
+    </view>
+
+    <!-- 驾车/步行路线信息 -->
+    <view class="routes-info" wx:if="{{routeInfos.length > 0}}">
+      <view class="mock-route-tip" wx:if="{{isRouteMock}}">
+        <view class="mrt-text"><image class="icon-xs-sm" src="/images/icons/icon-warning.svg" mode="aspectFit"></image> 当前为模拟路线（非真实道路），请配置腾讯地图 API Key 获取真实路线</view>
+      </view>
+      <view class="routes-header">
+        <text class="routes-title">各成员{{routeMode === 'driving' ? '驾车' : '步行'}}路线{{isRouteMock ? '(估)' : ''}}</text>
+        <view class="route-mode-switch" catchtap="onSwitchRouteMode">
+          <text class="rms-text"><image class="icon-xs" src="/images/icons/icon-navigate.svg" mode="aspectFit"></image> 切换{{routeMode === 'driving' ? '步行' : '驾车'}}</text>
+        </view>
+      </view>
+      <view class="route-item" wx:for="{{routeInfos}}" wx:key="name">
+        <text class="ri-name">{{item.name}}</text>
+        <text class="ri-dist">{{item.distanceText}}</text>
+        <text class="ri-time">{{item.durationText}}</text>
+      </view>
+    </view>
+    </view>
+  </view>
+
+  <!-- ========== 测试工具面板（长按成员数触发） ========== -->
+  <view class="panel-mask" wx:if="{{showTestTool}}" bindtap="onCloseTestTool"></view>
+  <view class="panel panel-test" wx:if="{{showTestTool}}">
+    <view class="panel-handle"></view>
+    <view class="panel-head-row">
+      <text class="panel-title">测试工具</text>
+      <view class="panel-close" bindtap="onCloseTestTool"><image class="icon-close" src="/images/icons/icon-close.svg" mode="aspectFit"></image></view>
+    </view>
+    <view class="panel-desc">添加模拟用户到碰头（长按成员数打开/关闭）</view>
+
+    <!-- 批量操作 -->
+    <view class="test-batch-row">
+      <view class="test-batch-btn test-add-all" catchtap="onAddAllTestUsers">全部加入</view>
+      <view class="test-batch-btn test-remove-all" catchtap="onRemoveAllTestUsers">全部移除</view>
+    </view>
+
+    <!-- 模拟用户列表 -->
+    <view class="test-user-list">
+      <view class="test-user-item" wx:for="{{testUsers}}" wx:key="id">
+        <view class="tu-avatar">{{item.emoji}}</view>
+        <view class="tu-info">
+          <text class="tu-name">{{item.name}}</text>
+          <text class="tu-pos">{{item.lat}}, {{item.lng}}</text>
+        </view>
+        <view class="tu-action">
+          <view
+            class="tu-btn {{item.added ? 'tu-btn-remove' : 'tu-btn-add'}}"
+            catchtap="onToggleTestUser"
+            data-index="{{index}}"
+          >
+            {{item.added ? '退出' : '加入'}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 隐藏的分享封面 Canvas -->
+  <canvas type="2d" id="shareCanvas" style="width:500px;height:400px;position:fixed;left:-9999px;top:-9999px"></canvas>
+
+</view>

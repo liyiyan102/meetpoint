@@ -1,0 +1,365 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--c-primary-bg) 0%, var(--c-bg) 40%);
+  padding: 0 32rpx;
+}
+
+/* 顶部导航栏 - 返回首页按钮 */
+.join-navbar {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 8rpx;
+}
+.join-navbar-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4rpx 12rpx rgba(74, 127, 229, 0.08);
+  transition: background 0.15s;
+}
+.join-navbar-back-hover {
+  background: rgba(235, 242, 255, 0.95);
+}
+.join-navbar-back-arrow {
+  font-size: 44rpx;
+  font-weight: 400;
+  color: var(--c-primary);
+  line-height: 1;
+  margin-top: -4rpx;
+}
+
+.join-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20rpx;
+}
+
+/* ---- 品牌图标 ---- */
+.join-icon-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-light) 100%);
+  box-shadow: 0 16rpx 48rpx rgba(74,127,229,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28rpx;
+}
+.join-icon-emoji {
+  font-size: 64rpx;
+  line-height: 1;
+}
+.join-icon-img {
+  width: 72rpx;
+  height: 72rpx;
+}
+.join-icon-text {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+}
+.icon-xs-sm { width: 28rpx; height: 28rpx; vertical-align: middle; }
+/* ---- 发起人头像 ---- */
+.join-creator-avatar-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 28rpx;
+  box-shadow: 0 16rpx 48rpx rgba(74,127,229,0.3);
+  border: 6rpx solid var(--c-primary);
+}
+.join-creator-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.join-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 12rpx;
+}
+.join-subtitle {
+  font-size: 26rpx;
+  color: var(--c-text2);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 36rpx;
+  padding: 0 40rpx;
+}
+
+/* ---- 信息卡片 ---- */
+.invite-card {
+  width: 100%;
+  padding: 32rpx;
+  border-radius: var(--r-lg);
+}
+.invite-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+}
+.invite-row + .invite-row { border-top: 1rpx solid var(--c-border); }
+.invite-label { font-size: 28rpx; color: var(--c-text2); }
+.invite-id {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--c-primary);
+  letter-spacing: 4rpx;
+}
+.invite-name { font-size: 28rpx; font-weight: 600; color: var(--c-text); }
+
+/* ---- 个人信息设置 ---- */
+.profile-card { width: 100%; }
+.profile-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--c-text);
+  margin-bottom: 20rpx;
+}
+.profile-row { display: flex; align-items: center; gap: 20rpx; }
+.avatar-btn {
+  width: 88rpx; height: 88rpx;
+  border-radius: 50%; overflow: hidden;
+  padding: 0; margin: 0; background: transparent;
+  line-height: normal; border: none; flex-shrink: 0;
+  box-shadow: 0 4rpx 16rpx rgba(74,127,229,0.15);
+}
+.avatar-btn::after { border: none; }
+.avatar-img {
+  width: 88rpx; height: 88rpx;
+  border-radius: 50%;
+  background: var(--c-primary-bg);
+  border: 4rpx solid var(--c-primary);
+}
+.nickname-input {
+  flex: 1;
+  height: 80rpx;
+  background: var(--c-bg);
+  border-radius: var(--r-md);
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  border: 2rpx solid var(--c-border);
+}
+
+/* ---- 加入按钮 ---- */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  width: 100%;
+  height: 104rpx;
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-light) 100%);
+  color: #FFF;
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  border-radius: var(--r-xl);
+  border: none;
+  box-shadow: 0 8rpx 32rpx rgba(74,127,229,0.4);
+  transition: opacity 0.2s;
+}
+.btn-primary::after { border: none; }
+.btn-primary:active { opacity: 0.85; }
+.btn-join {
+  width: 100%;
+  margin-top: 40rpx;
+}
+
+/* ---- 冲突提示 ---- */
+.conflict-hint {
+  margin-top: 28rpx;
+  font-size: 24rpx;
+  color: var(--c-warning);
+  text-align: center;
+  background: rgba(243,156,18,0.08);
+  padding: 16rpx 24rpx;
+  border-radius: var(--r-sm);
+}
+
+/* ---- 底部提示 ---- */
+.join-footer {
+  margin-top: 24rpx;
+  font-size: 22rpx;
+  color: var(--c-text3);
+  text-align: center;
+}
+
+/* ---- 碰面地点迷你卡片 ---- */
+.poi-card-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: #EBF2FF;
+  padding: 16rpx 32rpx;
+  border-radius: 20rpx;
+  margin: 16rpx auto 8rpx;
+  max-width: 480rpx;
+}
+.poi-card-icon { width: 28rpx; height: 28rpx; }
+.poi-card-name { font-size: 28rpx; font-weight: 600; color: #3b82f6; }
+.poi-card-distance { font-size: 24rpx; color: #9CA3AF; }
+
+/* ---- 加入成功弹层 ---- */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.modal-box {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 580rpx;
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 56rpx 40rpx 40rpx;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 24rpx 80rpx rgba(0, 0, 0, 0.15);
+}
+.modal-icon-wrap {
+  width: 100rpx; height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-light) 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24rpx;
+}
+.modal-icon { width: 56rpx; height: 56rpx; }
+.modal-icon-text {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+}
+.modal-title {
+  font-size: 36rpx; font-weight: 700; color: var(--c-text);
+  margin-bottom: 12rpx;
+}
+.modal-desc {
+  font-size: 26rpx; color: var(--c-text2);
+  text-align: center; margin-bottom: 40rpx; line-height: 1.5;
+}
+.modal-actions {
+  display: flex; gap: 20rpx; width: 100%;
+}
+.btn-modal {
+  flex: 1; height: 88rpx;
+  border-radius: 16rpx; font-size: 28rpx; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  border: none; padding: 0; margin: 0; line-height: 88rpx;
+}
+.btn-modal::after { border: none; }
+.btn-modal-secondary {
+  background: #EBF2FF; color: var(--c-primary);
+}
+.btn-modal-primary {
+  background: var(--c-primary); color: #FFFFFF;
+  box-shadow: 0 8rpx 24rpx rgba(74, 127, 229, 0.3);
+}
+
+/* ---- 参与人头像组 ---- */
+.invite-avatars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 0 20rpx;
+}
+.invite-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  border: 4rpx solid #FFFFFF;
+  background: #EBF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+  position: relative;
+}
+.invite-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.invite-avatar-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--c-primary);
+}
+.invite-avatar-more {
+  background: var(--c-primary-bg);
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--c-primary);
+}
+
+/* ---- CTA 按钮内图标 ---- */
+.btn-icon-inline {
+  width: 32rpx;
+  height: 32rpx;
+  vertical-align: middle;
+  margin-right: 8rpx;
+}
+
+/* ================================================================
+   选完头像后的就地昵称输入框
+   ================================================================ */
+.join-nickname-box {
+  width: 100%;
+  margin-top: 40rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: #FFFFFF;
+  border-radius: var(--r-lg);
+  padding: 20rpx 24rpx;
+  border: 2rpx solid var(--c-primary);
+  box-shadow: 0 8rpx 24rpx rgba(74,127,229,0.15);
+  animation: join-nickname-in 0.3s ease-out;
+}
+@keyframes join-nickname-in {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.join-nickname-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 3rpx solid var(--c-primary);
+}
+.join-nickname-input {
+  flex: 1;
+  height: 72rpx;
+  font-size: 30rpx;
+  color: var(--c-text);
+}
+.join-nickname-placeholder {
+  color: #9CA3AF;
+  font-size: 28rpx;
+}
+
+/* 未授权 hint 按钮（琥珀色） */
+.btn-join-hint {
+  background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%) !important;
+  box-shadow: 0 8rpx 32rpx rgba(245,158,11,0.4) !important;
+}
+

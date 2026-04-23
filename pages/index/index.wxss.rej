@@ -1,0 +1,13 @@
+@@ -99,8 +99,8 @@
+ /* 头像容器 */
+ .avatar-container {
+   position: relative;
+-  width: 128rpx;
+-  height: 128rpx;
++  width: 128rpx !important;
++  height: 128rpx !important;
+   flex-shrink: 0;
+-  padding: 0;
+-  margin: 0;
++  padding: 0 !important;
++  margin: 0 !important;

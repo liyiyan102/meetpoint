@@ -1,0 +1,19 @@
+# 微信开发者工具生成的文件
+.DS_Store
+node_modules/
+miniprogram_npm/
+
+# 调试日志
+debug.log
+npm-debug.log*
+
+# 编辑器配置
+.vscode/
+.idea/
+
+# 临时文件
+*.tmp
+*.log
+
+# 敏感配置（如果有的话）
+project.private.config.json

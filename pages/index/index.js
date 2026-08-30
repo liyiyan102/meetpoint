@@ -199,7 +199,14 @@ Page({
       }
     } catch (e) {
       console.error('创建碰头失败:', e);
-      wx.showToast({ title: '创建失败', icon: 'none' });
+      var errMsg = (e && e.message) || '网络异常';
+      // 提取更友好的错误信息
+      if (errMsg.indexOf('request:fail') >= 0 || errMsg.indexOf('fail') >= 0) {
+        errMsg = '网络连接失败，请检查网络';
+      } else if (errMsg.indexOf('HTTP') >= 0) {
+        errMsg = '服务器异常(' + errMsg + ')';
+      }
+      wx.showToast({ title: errMsg, icon: 'none', duration: 3000 });
     }
     this.setData({ loading: false });
   },
@@ -241,5 +248,49 @@ Page({
         }
       }
     });
+  },
+
+  // ========== 分享 ==========
+
+  // 转发给好友 / 群（右上角胶囊菜单 → 转发；或带 open-type="share" 的按钮）
+  onShareAppMessage() {
+    const info = app.globalData.userInfo || {};
+    const userName = info.nickname || '好友';
+    const active = this.data.activeMeeting;
+
+    // 如果有进行中的碰头：分享卡片直接拉对方进同一个碰头
+    if (active && active.meetingId) {
+      const memberCount = (active.members && active.members.length) || 1;
+      const poiName = active.meetPointName || '';
+      let title;
+      if (poiName) {
+        title = userName + '约你在' + poiName + '碰面，路线已规划好！';
+      } else if (memberCount > 1) {
+        title = userName + '和' + (memberCount - 1) + '个朋友在等你，快来碰面！';
+      } else {
+        title = userName + '发起了碰面，帮你规划最佳路线';
+      }
+      return {
+        title,
+        path: '/pages/join/join?id=' + active.meetingId
+          + '&inviter=' + encodeURIComponent(userName)
+          + '&count=' + memberCount
+          + '&poi=' + encodeURIComponent(poiName)
+      };
+    }
+
+    // 没有进行中的碰头：分享小程序首页，让朋友直接体验
+    return {
+      title: '约个地儿｜多人实时位置 · 智能推荐碰头点',
+      path: '/pages/index/index'
+    };
+  },
+
+  // 分享到朋友圈（部分基础库版本支持）
+  onShareTimeline() {
+    return {
+      title: '约个地儿｜帮一群人快速定个碰头地点',
+      query: ''
+    };
   }
 });

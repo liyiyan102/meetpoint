@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>约个地儿 · 交互流程图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #F9FAFB;
+    padding: 40px 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .canvas {
+    width: 1920px;
+    background: #FFFFFF;
+    margin: 0 auto;
+    padding: 60px;
+    border-radius: 24px;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .title-bar {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .main-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    font-size: 18px;
+    color: #6B7280;
+  }
+  .flow-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    margin-top: 30px;
+    position: relative;
+  }
+  .column {
+    position: relative;
+  }
+  .col-header {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    border: 2px solid #BFDBFE;
+  }
+  .col-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1E40AF;
+    margin-bottom: 4px;
+  }
+  .col-subtitle {
+    font-size: 14px;
+    color: #3B82F6;
+  }
+  .step-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .phone {
+    width: 280px;
+    height: 480px;
+    background: #FFFFFF;
+    border: 3px solid #1F2937;
+    border-radius: 32px;
+    margin: 0 auto;
+    padding: 14px 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 16px;
+    background: #1F2937;
+    border-radius: 0 0 12px 12px;
+  }
+  .phone-content {
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 20px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .step-label {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+  }
+  .step-desc {
+    text-align: center;
+    font-size: 13px;
+    color: #6B7280;
+    margin-top: 4px;
+  }
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0 10px;
+  }
+  .arrow-label {
+    background: #3B82F6;
+    color: #FFFFFF;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+  }
+  .arrow-line {
+    width: 3px;
+    height: 24px;
+    background: #3B82F6;
+    position: relative;
+  }
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid #3B82F6;
+  }
+
+  /* ================= 手机屏幕内容样式 ================= */
+  .mini-header {
+    text-align: center;
+    padding: 10px 0 14px;
+  }
+  .mini-logo {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 10px;
+    margin: 0 auto 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFF;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .mini-title-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .mini-sub-text {
+    font-size: 10px;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+  .feature-box {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #F3F4F6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin-bottom: 8px;
+    flex: 1;
+  }
+  .feature-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-icon {
+    width: 32px;
+    height: 32px;
+    background: #EFF6FF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #3B82F6;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .feature-info {
+    flex: 1;
+  }
+  .feature-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 2px;
+  }
+  .feature-detail {
+    font-size: 10px;
+    color: #6B7280;
+    line-height: 1.4;
+  }
+  .btn-bottom {
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    margin-top: 8px;
+  }
+  .btn-hint {
+    background: #F59E0B;
+  }
+  .btn-tip {
+    font-size: 9px;
+    color: #9CA3AF;
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  /* 授权界面 */
+  .auth-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+  }
+  .auth-avatar-big {
+    width: 80px;
+    height: 80px;
+    background: #EFF6FF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #3B82F6;
+    margin-bottom: 16px;
+    border: 3px dashed #3B82F6;
+  }
+  .auth-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .auth-desc {
+    font-size: 11px;
+    color: #6B7280;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .nickname-input {
+    width: 100%;
+    padding: 10px;
+    background: #FFFBEB;
+    border: 2px solid #F59E0B;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #92400E;
+    text-align: center;
+  }
+
+  /* 地图页 */
+  .map-screen {
+    flex: 1;
+    background: linear-gradient(135deg, #E0F2FE, #BAE6FD);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    margin-top: -4px;
+  }
+  .map-top-bar {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .map-pill {
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #111827;
+    flex: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .map-btn-circle {
+    width: 28px;
+    height: 28px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .map-markers {
+    position: absolute;
+    inset: 40px 20px 80px;
+  }
+  .map-marker {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .mm-1 { top: 20%; left: 30%; background: #3B82F6; }
+  .mm-2 { top: 55%; left: 65%; background: #10B981; }
+  .mm-3 { top: 35%; left: 75%; background: #F59E0B; }
+  .mm-4 { top: 70%; left: 25%; background: #EF4444; }
+  .map-center-star {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    background: #3B82F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+  }
+  .map-toolbar {
+    position: absolute;
+    right: 8px;
+    top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .map-tool-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .map-bottom-bar {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .map-bb-title {
+    font-size: 10px;
+    color: #6B7280;
+    margin-bottom: 2px;
+  }
+  .map-bb-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  /* 添加好友面板 */
+  .panel-screen {
+    flex: 1;
+    background: #F3F4F6;
+    border-radius: 8px;
+    position: relative;
+    padding: 12px 10px;
+  }
+  .panel-handle-mini {
+    width: 32px;
+    height: 3px;
+    background: #D1D5DB;
+    border-radius: 2px;
+    margin: 0 auto 10px;
+  }
+  .panel-title-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+  .invite-card-blue {
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  }
+  .invite-plus-circle {
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .invite-text-main {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 2px;
+  }
+  .invite-text-sub {
+    font-size: 9px;
+    color: rgba(255,255,255,0.85);
+  }
+  .manual-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .manual-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+  .manual-input-fake {
+    height: 28px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    color: #9CA3AF;
+    margin-bottom: 6px;
+  }
+  .manual-input-group-fake {
+    display: flex;
+    gap: 6px;
+  }
+  .manual-search-fake {
+    width: 48px;
+    height: 28px;
+    background: #3B82F6;
+    border-radius: 6px;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 分享卡片 */
+  .share-screen {
+    flex: 1;
+    background: #F7F7F7;
+    border-radius: 8px;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .wechat-bar {
+    background: #07C160;
+    color: #FFFFFF;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px 6px 0 0;
+    text-align: center;
+  }
+  .share-card {
+    background: #FFFFFF;
+    border-radius: 0 0 8px 8px;
+    padding: 12px;
+    border: 1px solid #E5E7EB;
+  }
+  .share-title-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .share-desc-text {
+    font-size: 10px;
+    color: #6B7280;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .share-cover {
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(135deg, #EBF2FF, #D4E4FF);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .share-cover-icon {
+    width: 32px;
+    height: 32px;
+    background: #3B82F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 14px;
+  }
+  .share-cover-text {
+    font-size: 10px;
+    color: #3B82F6;
+    font-weight: 600;
+  }
+  .share-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #F3F4F6;
+  }
+  .share-logo-mini {
+    width: 16px;
+    height: 16px;
+    background: #3B82F6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .share-brand-text {
+    font-size: 9px;
+    color: #6B7280;
+  }
+
+  /* Join 页 */
+  .join-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 8px;
+  }
+  .join-back {
+    width: 24px;
+    height: 24px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #3B82F6;
+    border: 1px solid #E5E7EB;
+    font-weight: 600;
+  }
+  .join-logo-big {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 50%;
+    margin: 20px auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 24px;
+  }
+  .join-title-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .join-poi-card {
+    background: #EFF6FF;
+    border: 1px solid #DBEAFE;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .join-poi-icon {
+    font-size: 14px;
+  }
+  .join-poi-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1E40AF;
+  }
+  .join-info-card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #F3F4F6;
+    margin-bottom: 10px;
+  }
+  .join-avatars-row {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+  }
+  .join-mini-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #FFFFFF;
+    font-weight: 700;
+    margin-left: -6px;
+  }
+  .join-mini-avatar:first-child { margin-left: 0; }
+  .ja-1 { background: #FFB347; }
+  .ja-2 { background: #FF6B6B; }
+  .ja-3 { background: #2ECC71; }
+  .join-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 10px;
+  }
+  .jir-label { color: #6B7280; }
+  .jir-value { color: #111827; font-weight: 500; }
+
+  /* 底部说明区 */
+  .core-features {
+    margin-top: 50px;
+    padding: 30px;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-radius: 20px;
+    border: 2px solid #BFDBFE;
+  }
+  .cf-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1E40AF;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .cf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .cf-item {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .cf-icon {
+    width: 48px;
+    height: 48px;
+    background: #EFF6FF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #3B82F6;
+    flex-shrink: 0;
+  }
+  .cf-info h3 {
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .cf-info p {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.5;
+  }
+
+  /* 列间连接箭头 */
+  .cross-arrow {
+    position: absolute;
+    top: 50%;
+    right: -30px;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  .cross-arrow-label {
+    background: #10B981;
+    color: #FFFFFF;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-bottom: 4px;
+  }
+
+  /* 页脚 */
+  .footer-note {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #E5E7EB;
+    color: #9CA3AF;
+    font-size: 13px;
+  }
+
+  /* 打印 / 导出优化 */
+  @media print {
+    body { background: #FFFFFF; padding: 0; }
+    .canvas { box-shadow: none; }
+  }
+
+  /* 导出按钮 */
+  .export-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    z-index: 1000;
+  }
+  .export-btn:hover { background: #2563EB; }
+
+  /* 截图时隐藏导出按钮 */
+  body.hide-btn .no-print { display: none !important; }
+</style>
+<script>
+  // 检查 URL 参数：?noBtn=1 时隐藏按钮（用于无头截图）
+  if (location.search.indexOf('noBtn') !== -1) {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('hide-btn');
+    });
+  }
+</script>
+</head>
+<body>
+
+<button class="export-btn no-print" onclick="window.print()">🖨️ 打印/导出为图片 (Cmd+P → 另存为 PDF/图片)</button>
+
+<div class="canvas" id="canvas">
+
+  <div class="title-bar">
+    <div class="main-title">约个地儿 · 交互流程图</div>
+    <div class="subtitle">Meet Point · Complete User Flow Diagram</div>
+  </div>
+
+  <div class="flow-container">
+
+    <!-- ========== 第一列：发起人流程 ========== -->
+    <div class="column">
+      <div class="col-header">
+        <div class="col-title">🚀 发起人流程</div>
+        <div class="col-subtitle">Initiator Flow</div>
+      </div>
+
+      <!-- Step 1: 首页首次进入 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content">
+            <div class="mini-header">
+              <div class="mini-logo">约</div>
+              <div class="mini-title-text">约个地儿</div>
+              <div class="mini-sub-text">多人实时位置 · 智能推荐</div>
+            </div>
+            <div class="feature-box">
+              <div class="feature-row">
+                <div class="feature-icon">+</div>
+                <div class="feature-info">
+                  <div class="feature-name">一键发起碰头</div>
+                  <div class="feature-detail">无需注册，极速创建</div>
+                </div>
+              </div>
+              <div class="feature-row">
+                <div class="feature-icon">🔗</div>
+                <div class="feature-info">
+                  <div class="feature-name">微信邀请好友</div>
+                  <div class="feature-detail">分享链接即可加入</div>
+                </div>
+              </div>
+              <div class="feature-row">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-info">
+                  <div class="feature-name">智能推荐地点</div>
+                  <div class="feature-detail">自动计算公平中间点</div>
+                </div>
+              </div>
+            </div>
+            <div class="btn-bottom">发起碰头</div>
+            <div class="btn-tip">点按钮先选个头像</div>
+          </div>
+        </div>
+        <div class="step-label">① 首页（首次进入）</div>
+        <div class="step-desc">展示产品特性介绍</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="arrow-label">点击「发起碰头」</div>
+        <div class="arrow-line"></div>
+      </div>
+
+      <!-- Step 2: 授权 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content">
+            <div class="mini-header">
+              <div class="mini-title-text">设置头像和昵称</div>
+              <div class="mini-sub-text">微信原生授权</div>
+            </div>
+            <div class="auth-screen">
+              <div class="auth-avatar-big">📷</div>
+              <div class="auth-title">选择你的头像</div>
+              <div class="auth-desc">头像会显示在地图上<br>好友可以看到你</div>
+              <div class="nickname-input">✨ 输入昵称 ✨</div>
+            </div>
+            <div class="btn-bottom btn-hint">请先设置昵称</div>
+          </div>
+        </div>
+        <div class="step-label">② 微信原生授权</div>
+        <div class="step-desc">选头像 → 输昵称（自动高亮）</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="arrow-label">昵称确认后自动发起</div>
+        <div class="arrow-line"></div>
+      </div>
+
+      <!-- Step 3: 地图页 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content" style="padding: 8px;">
+            <div class="map-screen">
+              <div class="map-top-bar">
+                <div class="map-btn-circle">‹</div>
+                <div class="map-pill">碰头中 · 4人</div>
+                <div class="map-btn-circle" style="background:#3B82F6;color:#FFF;">↗</div>
+              </div>
+              <div class="map-toolbar">
+                <div class="map-tool-btn">📍</div>
+                <div class="map-tool-btn">👥</div>
+                <div class="map-tool-btn">⭐</div>
+              </div>
+              <div class="map-markers">
+                <div class="map-marker mm-1">我</div>
+                <div class="map-marker mm-2">小</div>
+                <div class="map-marker mm-3">李</div>
+                <div class="map-marker mm-4">王</div>
+                <div class="map-center-star">⭐</div>
+              </div>
+              <div class="map-bottom-bar">
+                <div class="map-bb-title">📍 碰头地点</div>
+                <div class="map-bb-name">三里屯太古里</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">③ 地图页</div>
+        <div class="step-desc">实时位置 + 推荐地点</div>
+      </div>
+    </div>
+
+    <!-- ========== 第二列：邀请好友流程 ========== -->
+    <div class="column">
+      <div class="col-header" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-color:#FBBF24;">
+        <div class="col-title" style="color:#B45309;">📢 邀请好友流程</div>
+        <div class="col-subtitle" style="color:#F59E0B;">Invitation Flow</div>
+      </div>
+
+      <!-- Step A: 添加好友面板 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content" style="padding: 10px 8px;">
+            <div class="map-screen" style="max-height: 80px; flex: none;">
+              <div class="map-top-bar">
+                <div class="map-btn-circle" style="width:22px;height:22px;font-size:11px;">‹</div>
+                <div class="map-pill" style="font-size:9px;padding:3px 8px;">碰头中 · 4人</div>
+              </div>
+              <div class="map-markers" style="inset: 22px 10px 8px;">
+                <div class="map-marker mm-1" style="width:18px;height:18px;font-size:9px;">我</div>
+                <div class="map-marker mm-2" style="width:18px;height:18px;font-size:9px;">小</div>
+              </div>
+            </div>
+            <div class="panel-screen" style="margin-top: 8px; flex: 1;">
+              <div class="panel-handle-mini"></div>
+              <div class="panel-title-text">添加好友</div>
+              <div class="invite-card-blue">
+                <div class="invite-plus-circle">+</div>
+                <div>
+                  <div class="invite-text-main">邀请好友加入碰头</div>
+                  <div class="invite-text-sub">分享给好友，TA 点击即可加入</div>
+                </div>
+              </div>
+              <div class="manual-card">
+                <div class="manual-title">手动标记好友位置</div>
+                <div class="manual-input-fake">输入好友昵称</div>
+                <div class="manual-input-group-fake">
+                  <div class="manual-input-fake" style="flex:1;margin:0;">搜索地点或地图点选</div>
+                  <div class="manual-search-fake">搜索</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">A. 打开添加好友面板</div>
+        <div class="step-desc">蓝色卡片（主）+ 手动标记（次）</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="arrow-label">点击蓝色邀请卡片</div>
+        <div class="arrow-line"></div>
+      </div>
+
+      <!-- Step B: 微信分享 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content">
+            <div class="mini-header">
+              <div class="mini-title-text" style="color:#07C160;">💬 微信</div>
+            </div>
+            <div class="share-screen">
+              <div class="wechat-bar">好友聊天窗口</div>
+              <div class="share-card">
+                <div class="share-title-text">小明邀请你一起碰头</div>
+                <div class="share-desc-text">3人已加入 · 三里屯太古里</div>
+                <div class="share-cover">
+                  <div class="share-cover-icon">📍</div>
+                  <div class="share-cover-text">点击查看地点</div>
+                </div>
+                <div class="share-footer">
+                  <div class="share-logo-mini">约</div>
+                  <div class="share-brand-text">约个地儿 · 让碰头更省心</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">B. 分享到微信</div>
+        <div class="step-desc">好友/群聊均可</div>
+      </div>
+
+      <!-- 连接到第三列的标签 -->
+      <div class="arrow-down">
+        <div class="arrow-label" style="background:#10B981;">好友点击分享卡片</div>
+        <div class="arrow-line" style="background:#10B981;"></div>
+      </div>
+
+      <!-- 占位，展示流程总结 -->
+      <div class="step-item">
+        <div style="background: #FFFFFF; border: 2px dashed #3B82F6; border-radius: 16px; padding: 20px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🔁</div>
+          <div style="font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px;">实时同步中</div>
+          <div style="font-size: 12px; color: #6B7280; line-height: 1.6;">
+            新成员加入后<br>
+            所有人的地图自动更新<br>
+            显示新成员的位置和头像
+          </div>
+        </div>
+        <div class="step-label">C. 实时同步</div>
+        <div class="step-desc">多人位置同步到同一地图</div>
+      </div>
+    </div>
+
+    <!-- ========== 第三列：被邀请人流程 ========== -->
+    <div class="column">
+      <div class="col-header" style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%); border-color:#34D399;">
+        <div class="col-title" style="color:#065F46;">✨ 被邀请人流程</div>
+        <div class="col-subtitle" style="color:#10B981;">Join Flow</div>
+      </div>
+
+      <!-- Step 1: Join 页 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content" style="padding: 12px 10px;">
+            <div class="join-back">‹</div>
+            <div class="join-screen">
+              <div class="join-logo-big">📍</div>
+              <div class="join-title-text">小明邀请你碰头</div>
+              <div class="join-poi-card">
+                <div class="join-poi-icon">📍</div>
+                <div class="join-poi-text">三里屯太古里 · 距你3km</div>
+              </div>
+              <div class="join-info-card">
+                <div class="join-avatars-row">
+                  <div class="join-mini-avatar ja-1">小</div>
+                  <div class="join-mini-avatar ja-2">李</div>
+                  <div class="join-mini-avatar ja-3">王</div>
+                </div>
+                <div class="join-info-row">
+                  <span class="jir-label">发起人</span>
+                  <span class="jir-value">小明</span>
+                </div>
+                <div class="join-info-row">
+                  <span class="jir-label">已参与</span>
+                  <span class="jir-value">3 人</span>
+                </div>
+                <div class="join-info-row">
+                  <span class="jir-label">发起时间</span>
+                  <span class="jir-value">10分钟前</span>
+                </div>
+              </div>
+              <div class="btn-bottom">📍 加入碰头</div>
+              <div class="btn-tip">加入后需授权定位</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">① 加入页（Join）</div>
+        <div class="step-desc">查看碰头详情</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="arrow-label">点击「加入碰头」</div>
+        <div class="arrow-line"></div>
+      </div>
+
+      <!-- Step 2: 授权 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content">
+            <div class="mini-header">
+              <div class="mini-title-text">设置头像和昵称</div>
+              <div class="mini-sub-text">快速完成授权</div>
+            </div>
+            <div class="auth-screen">
+              <div class="auth-avatar-big" style="background: #D1FAE5; border-color:#10B981; color:#10B981;">📷</div>
+              <div class="auth-title">选择你的头像</div>
+              <div class="auth-desc">完成后自动加入碰头<br>立即可见所有人的位置</div>
+              <div class="nickname-input">✨ 输入昵称 ✨</div>
+            </div>
+            <div class="btn-bottom" style="background:#10B981;">确认加入</div>
+          </div>
+        </div>
+        <div class="step-label">② 快速授权</div>
+        <div class="step-desc">同样的两步流程</div>
+      </div>
+
+      <div class="arrow-down">
+        <div class="arrow-label" style="background:#10B981;">自动加入成功</div>
+        <div class="arrow-line" style="background:#10B981;"></div>
+      </div>
+
+      <!-- Step 3: 进入地图 -->
+      <div class="step-item">
+        <div class="phone">
+          <div class="phone-content" style="padding: 8px;">
+            <div class="map-screen">
+              <div class="map-top-bar">
+                <div class="map-btn-circle">‹</div>
+                <div class="map-pill">碰头中 · 4人</div>
+                <div class="map-btn-circle" style="background:#3B82F6;color:#FFF;">↗</div>
+              </div>
+              <div class="map-toolbar">
+                <div class="map-tool-btn">📍</div>
+                <div class="map-tool-btn">👥</div>
+                <div class="map-tool-btn">⭐</div>
+              </div>
+              <div class="map-markers">
+                <div class="map-marker mm-1">我</div>
+                <div class="map-marker mm-2">小</div>
+                <div class="map-marker mm-3">李</div>
+                <div class="map-marker mm-4" style="background:#10B981;animation: pulse 2s infinite;">新</div>
+                <div class="map-center-star">⭐</div>
+              </div>
+              <div class="map-bottom-bar">
+                <div class="map-bb-title">✅ 已加入碰头</div>
+                <div class="map-bb-name">三里屯太古里 · 导航</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">③ 进入地图页</div>
+        <div class="step-desc">看到所有成员 · 一键导航</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== 核心能力说明 ========== -->
+  <div class="core-features">
+    <div class="cf-title">✨ 三大核心能力</div>
+    <div class="cf-grid">
+      <div class="cf-item">
+        <div class="cf-icon">📡</div>
+        <div class="cf-info">
+          <h3>实时位置同步</h3>
+          <p>所有人的位置每隔几秒自动更新，谁快到了、谁还远，一目了然。</p>
+        </div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-icon">🎯</div>
+        <div class="cf-info">
+          <h3>智能地点推荐</h3>
+          <p>根据所有人实时坐标计算中心点，推荐最公平的餐厅、咖啡馆、商场。</p>
+        </div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-icon">🧭</div>
+        <div class="cf-info">
+          <h3>一键导航</h3>
+          <p>选好碰头地点后，所有成员可直接调起地图 App，开始导航。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    约个地儿 MeetPoint · 2026 · 让碰头更省心
+  </div>
+
+</div>
+
+<style>
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 2px 6px rgba(16,185,129,0.4); }
+  50% { transform: scale(1.1); box-shadow: 0 4px 12px rgba(16,185,129,0.7); }
+}
+</style>
+
+</body>
+</html>

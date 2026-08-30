@@ -18,11 +18,12 @@ function getQQMapSDK() {
   return _qqmapsdk;
 }
 
-// 地点类型配置
+// 地点类型配置（顺序按用户体验优先级：美食 → 咖啡店 → 酒吧 → 公园 → 地铁站 → 商场 → 商业圈）
 const PLACE_TYPES = [
   { id: 'food',    keyword: '美食',   icon: '/images/icons/icon-food.svg',     label: '美食' },
-  { id: 'park',    keyword: '公园',   icon: '/images/icons/icon-park.svg',     label: '公园' },
   { id: 'cafe',    keyword: '咖啡店', icon: '/images/icons/icon-cafe.svg',     label: '咖啡店' },
+  { id: 'bar',     keyword: '酒吧',   icon: '/images/icons/icon-bar.svg',      label: '酒吧' },
+  { id: 'park',    keyword: '公园',   icon: '/images/icons/icon-park.svg',     label: '公园' },
   { id: 'subway',  keyword: '地铁站', icon: '/images/icons/icon-subway.svg',   label: '地铁站' },
   { id: 'mall',    keyword: '商场',   icon: '/images/icons/icon-mall.svg',     label: '商场' },
   { id: 'biz',     keyword: '商业圈', icon: '/images/icons/icon-district.svg', label: '商业圈' }
@@ -362,8 +363,9 @@ function _fmtTime(min) {
 function _mockPOI(center, type, radius) {
   var names = {
     food: ['老王家饺子馆', '川味坊', '江南小厨', '鲜味轩', '粤味居', '日料·花见', '韩式烤肉', '意式简餐', '火锅先生', '面条工坊'],
-    park: ['中心公园', '人民公园', '湿地花园', '滨江绿道', '植物园', '森林公园', '体育公园', '儿童乐园', '文化广场', '生态园'],
     cafe: ['星巴克', '瑞幸咖啡', 'Manner', 'M Stand', 'Seesaw', '%Arabica', '太平洋咖啡', 'Costa', '蓝瓶咖啡', '皮爷咖啡'],
+    bar:  ['Lush Bar', 'Speakeasy 暗酒馆', '微醺 Club', 'Whisky Library', '青鸟酒吧', '夜归人', 'The Local', '蓝调 Jazz Bar', '醉月鸡尾酒', '深夜食堂 Bar'],
+    park: ['中心公园', '人民公园', '湿地花园', '滨江绿道', '植物园', '森林公园', '体育公园', '儿童乐园', '文化广场', '生态园'],
     subway: ['中心站', '人民广场站', '南京路站', '科技园站', '大学城站', '火车站', '机场站', '商业街站', '市政府站', '公园站'],
     mall: ['万达广场', '银泰百货', '华润万象城', 'SKP', '大悦城', '龙湖天街', '印象城', '吾悦广场', '环球港', '来福士'],
     biz: ['CBD中心', '科技园', '金融街', '商务中心', '创业大厦', '产业园', '总部基地', '电商园', '文创园', '智慧谷']

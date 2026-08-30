@@ -2,6 +2,7 @@
   "cloud": true,
   "pages": [
     "pages/index/index",
+    "pages/today/today",
     "pages/join/join",
     "pages/map/map"
   ],
@@ -11,6 +12,26 @@
     "navigationBarTextStyle": "black",
     "backgroundColor": "#F5F7FA",
     "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9CA3AF",
+    "selectedColor": "#4A7FE5",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/toolbar/tab-home.png",
+        "selectedIconPath": "images/toolbar/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/today/today",
+        "text": "今日去哪玩",
+        "iconPath": "images/toolbar/tab-today.png",
+        "selectedIconPath": "images/toolbar/tab-today-active.png"
+      }
+    ]
   },
   "permission": {
     "scope.userLocation": {

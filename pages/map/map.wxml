@@ -278,6 +278,18 @@
         </view>
       </view>
     </view>
+
+    <!-- 「参与智能推荐」开关 -->
+    <view class="up-recommend-toggle" bindtap="onTogglePanelUserRecommend">
+      <view class="up-recommend-info">
+        <text class="up-recommend-title">参与智能推荐</text>
+        <text class="up-recommend-desc">{{panelUser.includeInRecommend === false ? '已忽略 TA 的位置' : '推荐时会考虑 TA 的位置'}}</text>
+      </view>
+      <view class="up-toggle {{panelUser.includeInRecommend === false ? 'up-toggle-off' : 'up-toggle-on'}}">
+        <view class="up-toggle-knob"></view>
+      </view>
+    </view>
+
     <view class="panel-actions">
       <button class="btn-green btn-sm" bindtap="onNavToUser"><image class="btn-icon-sm" src="/images/icons/icon-navigate.svg" mode="aspectFit"></image> 导航到 TA</button>
       <button class="btn-sm btn-del" wx:if="{{panelUser.isManual}}" bindtap="onDeleteManualFriend"><image class="btn-icon-sm" src="/images/icons/icon-delete.svg" mode="aspectFit"></image> 删除</button>

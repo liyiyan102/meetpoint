@@ -121,6 +121,8 @@ Page({
       role: options.role || 'creator',
       userId: (app.globalData.userInfo && app.globalData.userInfo.userId) || ''
     });
+    // 重置「参与智能推荐」缓存（按 meetingId 维度独立）
+    this._recommendExcludeCache = null;
     this._mapCtx = null;
     this._locationTimer = null;
     this._refreshTimer = null;
@@ -1009,6 +1011,7 @@ Page({
       isSelf: isSelf,
       isOnline: online,
       offlineTime: offlineTime,
+      includeInRecommend: this._isIncludedInRecommend(isManual ? data.id : data.userId, isManual),
       locationName: isManual ? (data.address || '') : ''
     };
 
@@ -1035,6 +1038,60 @@ Page({
     this.setData({ showUserPanel: false });
     this._refreshMeeting();
     this._showToast('已删除');
+  },
+
+  // ========== 「参与智能推荐」开关（排除某成员的位置参与中心点计算） ==========
+
+  // 当前碰头排除集合的 storage key
+  _getRecommendExcludeKey() {
+    return 'recommend_exclude_' + (this.data.meetingId || 'default');
+  },
+
+  // 读取排除集合 { 'userId|manualId': true, ... }
+  _getRecommendExcludeSet() {
+    if (this._recommendExcludeCache) return this._recommendExcludeCache;
+    try {
+      var saved = wx.getStorageSync(this._getRecommendExcludeKey());
+      this._recommendExcludeCache = (saved && typeof saved === 'object') ? saved : {};
+    } catch (e) {
+      this._recommendExcludeCache = {};
+    }
+    return this._recommendExcludeCache;
+  },
+
+  // 持久化排除集合
+  _saveRecommendExcludeSet() {
+    try {
+      wx.setStorageSync(this._getRecommendExcludeKey(), this._recommendExcludeCache || {});
+    } catch (e) { /* ignore */ }
+  },
+
+  // 判断某个成员是否参与推荐计算（默认 true）
+  _isIncludedInRecommend(memberId, isManual) {
+    if (!memberId) return true;
+    var key = (isManual ? 'manual:' : 'user:') + memberId;
+    var set = this._getRecommendExcludeSet();
+    return !set[key];
+  },
+
+  // 用户面板「参与智能推荐」开关切换
+  onTogglePanelUserRecommend() {
+    var user = this.data.panelUser;
+    if (!user || !user.id) return;
+    var key = (user.isManual ? 'manual:' : 'user:') + user.id;
+    var set = this._getRecommendExcludeSet();
+    var nextIncluded;
+    if (set[key]) {
+      delete set[key];
+      nextIncluded = true;
+    } else {
+      set[key] = true;
+      nextIncluded = false;
+    }
+    this._recommendExcludeCache = set;
+    this._saveRecommendExcludeSet();
+    this.setData({ 'panelUser.includeInRecommend': nextIncluded });
+    this._showToast(nextIncluded ? '已加入智能推荐' : '已忽略 TA 的位置');
   },
 
   // ========== 地点面板 ==========
@@ -1397,13 +1454,28 @@ Page({
       return;
     }
 
-    const center = algo.calculateCenter(points);
+    // 过滤掉用户主动设置「不参与智能推荐」的成员
+    const that = this;
+    const filteredPoints = points.filter(function(p) {
+      return that._isIncludedInRecommend(p.id, p.isManual);
+    });
+
+    // 兜底：所有人都被排除时，回退用全员（避免空集导致无中心点）
+    var pointsForCenter = filteredPoints.length > 0 ? filteredPoints : points;
+    if (filteredPoints.length === 0 && points.length > 0) {
+      this._showToast('当前所有成员都未参与推荐，已使用全部位置');
+    } else if (filteredPoints.length < points.length) {
+      var excludedCount = points.length - filteredPoints.length;
+      this._showToast('已忽略 ' + excludedCount + ' 位成员的位置');
+    }
+
+    const center = algo.calculateCenter(pointsForCenter);
     if (!center) {
       this.setData({ recommendLoading: false });
       return;
     }
 
-    const radius = algo.calculateSearchRadius(center, points);
+    const radius = algo.calculateSearchRadius(center, pointsForCenter);
 
     mapService.searchPOI(center, id, radius).then(list => {
       // 处理列表中的类型显示

@@ -32,21 +32,26 @@ function callFunction(name, data) {
     wx.request({
       url: BASE_URL + '/' + name,
       method: 'POST',
+      timeout: 15000,
       header: {
         'content-type': 'application/json',
         'x-wx-openid': openid
       },
       data: body,
       success(res) {
+        console.log('[API] ' + name + ' response:', res.statusCode, JSON.stringify(res.data).substring(0, 200));
         if (res.statusCode === 200) {
           resolve(res.data);
         } else {
-          reject(new Error('HTTP ' + res.statusCode));
+          var msg = 'HTTP ' + res.statusCode;
+          if (res.data && res.data.msg) msg += ': ' + res.data.msg;
+          reject(new Error(msg));
         }
       },
       fail(err) {
-        console.error('[API] ' + name + ' fail:', err);
-        reject(err);
+        console.error('[API] ' + name + ' fail:', JSON.stringify(err));
+        var msg = (err && err.errMsg) || '网络请求失败';
+        reject(new Error(msg));
       }
     });
   });

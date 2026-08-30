@@ -1,0 +1,218 @@
+<!-- 今日去哪玩 · 星座MBTI智能推荐 -->
+<view class="app">
+
+  <!-- 自定义导航栏（无白线） -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-title">今日去哪玩</view>
+  </view>
+
+  <!-- ========== 顶部环境卡片 ========== -->
+  <view class="env">
+    <view class="env-row">
+      <view class="env-left">
+        <view class="env-title">今日去哪玩 🎯</view>
+        <view class="env-loc">{{locDesc}}</view>
+      </view>
+      <view class="env-right">
+        <view class="env-temp">{{weather.temp}}°</view>
+        <view class="env-desc">{{weather.desc}}</view>
+      </view>
+    </view>
+    <view class="env-tags">
+      <view class="tag">{{dateTag}}</view>
+      <view class="tag yi" wx:if="{{lunar.yi.length}}">✓ 宜：{{lunar.yiStr}}</view>
+      <view class="tag ji" wx:if="{{lunar.ji.length}}">✗ 忌：{{lunar.jiStr}}</view>
+    </view>
+  </view>
+
+  <!-- ========== 表单区 ========== -->
+  <view class="form" wx:if="{{stage === 'form'}}">
+
+    <!-- 日期 -->
+    <view class="form-block">
+      <view class="form-h2"><text class="n">⌚</text> 哪天出发？</view>
+      <picker mode="date" value="{{form.date}}" start="{{minDate}}" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="date-input">{{form.dateDisplay}}</view>
+      </picker>
+      <view class="date-quick">
+        <view wx:for="{{dateQuick}}" wx:key="offset"
+          class="date-chip {{form.dateOffset === item.offset ? 'active' : ''}}"
+          data-offset="{{item.offset}}" bindtap="onDateQuick">
+          {{item.label}}
+        </view>
+      </view>
+      <view class="date-info" wx:if="{{dateInfoShow}}">
+        <view class="di-row"><text class="di-label">星期</text><text class="di-val">{{lunar.weekday}}</text></view>
+        <view class="di-row"><text class="di-label">农历</text><text class="di-val">{{lunar.dateStr}}{{lunar.solarTerm ? ' · ' + lunar.solarTerm : ''}}</text></view>
+        <view class="di-row"><text class="di-label">宜</text><text class="di-yi">{{lunar.yiStr}}</text></view>
+        <view class="di-row"><text class="di-label">忌</text><text class="di-ji">{{lunar.jiStr}}</text></view>
+      </view>
+    </view>
+
+    <!-- ① 玩多久 -->
+    <view class="form-block">
+      <view class="form-h2"><text class="n">①</text> 玩多久？</view>
+      <view class="chips">
+        <view wx:for="{{durationOptions}}" wx:key="val"
+          class="chip {{form.duration === item.val ? 'active' : ''}}"
+          data-group="duration" data-val="{{item.val}}" bindtap="onChip">
+          <text class="chip-ico">{{item.ico}}</text>{{item.val}}
+        </view>
+      </view>
+    </view>
+
+    <!-- ② 能量 -->
+    <view class="form-block">
+      <view class="form-h2"><text class="n">②</text> 今天的能量？</view>
+      <view class="chips">
+        <view wx:for="{{energyOptions}}" wx:key="val"
+          class="chip {{form.energy === item.val ? 'active' : ''}}"
+          data-group="energy" data-val="{{item.val}}" bindtap="onChip">
+          <text class="chip-ico">{{item.ico}}</text>{{item.val}}
+        </view>
+      </view>
+    </view>
+
+    <!-- ③ 想干嘛 -->
+    <view class="form-block">
+      <view class="form-h2"><text class="n">③</text> 想干嘛？（最多选 2 个）</view>
+      <view class="chips">
+        <view wx:for="{{prefOptions}}" wx:key="val"
+          class="chip {{form.preference.includes(item.val) ? 'active' : ''}}"
+          data-group="preference" data-val="{{item.val}}" bindtap="onChip">
+          <text class="chip-ico">{{item.ico}}</text>{{item.val}}
+        </view>
+      </view>
+    </view>
+
+    <!-- ④ 星座（选填） -->
+    <view class="form-block opt">
+      <view class="form-h2"><text class="n">④</text> 你的星座？<text class="opt-tag">选填</text></view>
+      <picker mode="selector" range="{{constellationLabels}}" value="{{constellationIndex}}" bindchange="onConstellationChange">
+        <view class="select-input">{{constellationLabels[constellationIndex]}}</view>
+      </picker>
+      <view class="reading-badge mystic">
+        <text class="rb-icon">{{constellationReading.icon}}</text>
+        <text>{{constellationReading.text}}</text>
+      </view>
+    </view>
+
+    <!-- ⑤ MBTI（选填） -->
+    <view class="form-block opt">
+      <view class="form-h2"><text class="n">⑤</text> 你的 MBTI？<text class="opt-tag">选填</text></view>
+      <picker mode="selector" range="{{mbtiLabels}}" value="{{mbtiIndex}}" bindchange="onMbtiChange">
+        <view class="select-input">{{mbtiLabels[mbtiIndex]}}</view>
+      </picker>
+      <view class="reading-badge mystic">
+        <text class="rb-icon">{{mbtiReading.icon}}</text>
+        <text>{{mbtiReading.text}}</text>
+      </view>
+    </view>
+
+    <!-- CTA -->
+    <button class="cta-btn" bindtap="onSubmit" disabled="{{loading}}">
+      {{loading ? '命运推演中...' : '让命运决定吧 ✨'}}
+    </button>
+  </view>
+
+  <!-- ========== 加载态 ========== -->
+  <view class="loading" wx:if="{{stage === 'loading'}}">
+    <view class="loading-dots">
+      <text class="dot">·</text><text class="dot">·</text><text class="dot">·</text>
+    </view>
+    <view class="loading-txt">命运正在结合你的位置、天气、星象{{'\n'}}为你抽一个今天最对的去处</view>
+  </view>
+
+  <!-- ========== 结果卡片 ========== -->
+  <view class="result" wx:if="{{stage === 'result'}}">
+    <view class="result-card">
+      <view class="result-badge">✨ 命运为你抽的</view>
+      <view class="result-place" bindtap="onPlaceTap" data-name="{{result.place_name}}">
+        <text class="place-link">{{result.place_name}}</text>
+        <text class="link-ico">↗</text>
+      </view>
+      <view class="result-meta">
+        <text class="meta-span">📍 {{result.distance_km}} km</text>
+        <text class="meta-span">🚕 {{result.transport}}</text>
+        <text class="meta-span">⏱️ 约 {{result.suggested_duration_hour}}h</text>
+        <text class="meta-span">💰 ¥{{result.cost_per_person_rmb}}</text>
+      </view>
+
+      <view class="why-box">
+        <view class="box-title">为什么是这里</view>
+        <view class="why-item" wx:for="{{result.why}}" wx:key="*this">· {{item}}</view>
+      </view>
+
+      <view class="hl-box" wx:if="{{result.highlights.length}}">
+        <view class="box-title">今日特别推荐</view>
+        <view class="hl-item" wx:for="{{result.highlights}}" wx:key="name" bindtap="onHighlightTap" data-name="{{item.name}}" data-place="{{result.place_name}}">
+          <text class="hl-name">{{item.name}} <text class="link-ico-sm">↗</text></text>
+          <text class="hl-tag">{{item.tag}}</text>
+        </view>
+      </view>
+
+      <view class="tip-line">💡 点击地点名或活动名可跳转腾讯地图查看详情和导航</view>
+
+      <view class="actions-col">
+        <view class="actions-row">
+          <button class="btn-sec" bindtap="onReselect">↺ 重新选择</button>
+          <button class="btn-sec" bindtap="onRegenerate">🎲 再抽一签</button>
+        </view>
+        <button class="btn-pri" bindtap="onOpenPoster">✨ 生成分享海报 →</button>
+      </view>
+    </view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+
+  <!-- ========== 分享海报弹层 ========== -->
+  <view class="poster-overlay {{showPoster ? 'show' : ''}}" bindtap="onClosePoster">
+    <view class="poster-modal" catchtap="">
+      <view class="poster-wrap">
+        <view class="poster-card">
+          <view class="poster-blob blob1"></view>
+          <view class="poster-blob blob2"></view>
+          <view class="poster-blob blob3"></view>
+
+          <view class="poster-top">
+            <text class="poster-brand">约个地儿 · 今日去哪玩</text>
+            <text class="poster-date">{{posterData.date}}</text>
+          </view>
+
+          <view class="poster-badge">{{posterData.badge}}</view>
+          <view class="poster-place">{{posterData.place}}</view>
+          <view class="poster-meta-row">
+            <text class="pm-span" wx:for="{{posterData.meta}}" wx:key="*this">{{item}}</text>
+          </view>
+
+          <view class="poster-section">
+            <view class="ps-title">为什么是这里 💡</view>
+            <view class="why-line" wx:for="{{posterData.why}}" wx:key="*this">🔮 {{item}}</view>
+          </view>
+
+          <view class="poster-section" wx:if="{{posterData.highlights.length}}">
+            <view class="ps-title">今日特别推荐 🎪</view>
+            <view class="hl-chip-list">
+              <view class="hl-chip {{index % 2 === 1 ? 'alt' : ''}}" wx:for="{{posterData.highlights}}" wx:key="name">
+                <text class="hl-chip-name">🎯 {{item.name}}</text>
+                <text class="hl-chip-tag">{{item.tag}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="poster-lunar">✨ {{posterData.lunarTip}}</view>
+
+          <view class="poster-footer">
+            <text class="pf-logo">约个地儿 🗺️</text>
+            <text class="pf-tip">碰面难、选点难？{{'\n'}}约个地儿帮你搞定</text>
+          </view>
+        </view>
+      </view>
+      <view class="poster-actionbar">
+        <button class="poster-btn ghost" bindtap="onClosePoster">关闭</button>
+        <button class="poster-btn solid" bindtap="onSavePoster">📥 保存海报图</button>
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -1,7 +1,20 @@
 {
   "description": "约个地儿 - 根据多人实时位置智能推荐最佳碰头地点",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "指令" },
+      { "type": "folder", "value": "功能截图0424" },
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": "server" },
+      { "type": "file",   "value": "功能截图0424.zip" },
+      { "type": "file",   "value": "README.md" },
+      { "type": "file",   "value": "真机头像问题排查指南.md" },
+      { "type": "file",   "value": "体验版头像问题解决方案.md" },
+      { "type": "suffix", "value": ".md" },
+      { "type": "suffix", "value": ".rej" },
+      { "type": "suffix", "value": ".orig" },
+      { "type": "suffix", "value": ".bak" }
+    ],
     "include": []
   },
   "setting": {

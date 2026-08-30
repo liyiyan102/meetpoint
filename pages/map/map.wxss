@@ -599,6 +599,52 @@
 .panel-user { padding-bottom: calc(32rpx + env(safe-area-inset-bottom)); }
 .user-panel-content { display: flex; align-items: center; gap: 24rpx; margin-bottom: 24rpx; }
 
+/* 「参与智能推荐」开关行 */
+.up-recommend-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+  background: #F8FAFC;
+  border-radius: 20rpx;
+  margin-bottom: 24rpx;
+}
+.up-recommend-info { flex: 1; min-width: 0; }
+.up-recommend-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 6rpx;
+}
+.up-recommend-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #6B7280;
+}
+.up-toggle {
+  width: 80rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+.up-toggle-on { background: #3B82F6; }
+.up-toggle-off { background: #D1D5DB; }
+.up-toggle-knob {
+  position: absolute;
+  top: 4rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.15);
+  transition: left 0.2s ease;
+}
+.up-toggle-on .up-toggle-knob { left: 40rpx; }
+.up-toggle-off .up-toggle-knob { left: 4rpx; }
+
 /* 头像容器 */
 .up-avatar-wrap {
   position: relative;

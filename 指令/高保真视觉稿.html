@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>约个地儿 · 高保真视觉稿</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #F3F4F6;
+    padding: 60px 20px;
+    -webkit-font-smoothing: antialiased;
+    color: #111827;
+  }
+  .canvas {
+    width: 2400px;
+    background: #FFFFFF;
+    margin: 0 auto;
+    padding: 80px 60px 60px;
+    border-radius: 32px;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.1);
+  }
+
+  /* ========== 顶部标题 ========== */
+  .title-hero {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .title-hero h1 {
+    font-size: 64px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  .title-hero .subtitle {
+    font-size: 24px;
+    color: #6B7280;
+    margin-bottom: 32px;
+  }
+  .title-hero .meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 24px;
+    background: #EFF6FF;
+    border-radius: 100px;
+    font-size: 16px;
+    color: #1E40AF;
+    font-weight: 600;
+  }
+  .meta .dot {
+    width: 8px;
+    height: 8px;
+    background: #10B981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+
+  /* ========== 分区标题 ========== */
+  .section-divider {
+    margin: 100px 0 60px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .section-divider h2 {
+    font-size: 40px;
+    font-weight: 700;
+    color: #111827;
+    white-space: nowrap;
+  }
+  .section-divider .line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #3B82F6, transparent);
+  }
+  .section-divider .tag {
+    background: #3B82F6;
+    color: #FFFFFF;
+    padding: 6px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* ========== 手机网格 ========== */
+  .phones-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    align-items: start;
+  }
+  .phones-row-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 80px;
+    justify-items: center;
+  }
+
+  /* ========== 手机设备框 ========== */
+  .phone {
+    width: 420px;
+    height: 900px;
+    background: #111827;
+    border-radius: 56px;
+    padding: 16px;
+    box-shadow: 
+      0 20px 60px rgba(0,0,0,0.25),
+      inset 0 0 0 2px rgba(255,255,255,0.1);
+    position: relative;
+    margin: 0 auto;
+  }
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 32px;
+    background: #111827;
+    border-radius: 0 0 20px 20px;
+    z-index: 100;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #F7F9FC;
+    border-radius: 42px;
+    overflow: hidden;
+    position: relative;
+  }
+  .status-bar {
+    height: 54px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    z-index: 50;
+    position: relative;
+  }
+  .status-bar .time { font-weight: 700; }
+  .status-bar .icons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  /* ========== 首页真实结构 ========== */
+  .page-index {
+    padding: 0 40px 40px;
+    height: calc(100% - 54px);
+    overflow: hidden;
+    position: relative;
+  }
+  .idx-header {
+    text-align: center;
+    padding: 30px 0 40px;
+  }
+  .idx-logo {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 14px;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 42px;
+    box-shadow: 0 12px 32px rgba(74,127,229,0.3);
+    font-weight: 800;
+    font-family: serif;
+  }
+  .idx-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .idx-sub {
+    font-size: 14px;
+    color: #6B7280;
+    font-weight: 500;
+  }
+
+  /* 特性卡片 - 贴近真实样式 */
+  .feature-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    border: 1px solid #F3F4F6;
+    padding: 24px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    margin-top: 24px;
+  }
+  .feature-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+  }
+  .feature-item + .feature-item {
+    margin-top: 12px;
+  }
+  .feature-icon-wrap {
+    width: 52px;
+    height: 52px;
+    background: #EFF6FF;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .feature-icon-wrap svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: #3B82F6;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .feature-texts {
+    flex: 1;
+    padding-top: 2px;
+  }
+  .feature-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .feature-desc {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.5;
+  }
+
+  /* 底部按钮 */
+  .bottom-anchor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 40px 40px;
+    background: linear-gradient(180deg, transparent, #F7F9FC 40%);
+  }
+  .btn-launch {
+    width: 100%;
+    height: 60px;
+    background: #4A7FE5;
+    color: #FFFFFF;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 8px 24px rgba(74,127,229,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bottom-text {
+    font-size: 12px;
+    color: #9CA3AF;
+    text-align: center;
+    margin-top: 14px;
+    font-weight: 500;
+  }
+
+  /* 我的信息卡片 - 已授权状态 */
+  .section-title-small {
+    font-size: 15px;
+    color: #6B7280;
+    font-weight: 600;
+    padding-left: 4px;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  .profile-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    border: 1px solid #F3F4F6;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .avatar-container {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  .avatar-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB347, #FF8C42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 26px;
+    font-weight: 700;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .edit-badge {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 26px;
+    height: 26px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .edit-badge svg {
+    width: 14px;
+    height: 14px;
+    fill: #3B82F6;
+  }
+  .input-box {
+    flex: 1;
+    background: #F3F4F6;
+    border-radius: 16px;
+    padding: 0 16px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #111827;
+    font-weight: 600;
+  }
+  .input-box-highlight {
+    background: #FFFBEB !important;
+    border: 2px solid #F59E0B !important;
+    animation: pulseHighlight 1s infinite;
+  }
+  @keyframes pulseHighlight {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.2); }
+  }
+  .nickname-placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+  }
+
+  /* 进行中碰头卡片 */
+  .active-card {
+    position: relative;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 100%);
+    border: 1px solid #EBF0FA;
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: 0 8px 24px rgba(74, 127, 229, 0.06);
+    overflow: hidden;
+  }
+  .active-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #60A5FA, #3B82F6);
+  }
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(16,185,129,0.1);
+    border-radius: 6px;
+  }
+  .status-tag .pulse-dot {
+    width: 6px; height: 6px;
+    background: #10B981;
+    border-radius: 50%;
+  }
+  .status-tag-text {
+    font-size: 11px;
+    color: #10B981;
+    font-weight: 600;
+  }
+  .active-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+  .active-detail-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .active-detail-label {
+    font-size: 13px;
+    color: #9CA3AF;
+    width: 60px;
+  }
+  .active-detail-value {
+    font-size: 13px;
+    color: #111827;
+    font-weight: 500;
+  }
+  .avatar-stack {
+    display: flex;
+    margin-bottom: 4px;
+    justify-content: flex-end;
+  }
+  .stack-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: -8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .stack-avatar:first-child { margin-left: 0; }
+  .sa-1 { background: linear-gradient(135deg, #FFB347, #FF8C42); }
+  .sa-2 { background: linear-gradient(135deg, #F87171, #EF4444); }
+  .sa-3 { background: linear-gradient(135deg, #34D399, #10B981); }
+  .sa-4 { background: linear-gradient(135deg, #A78BFA, #8B5CF6); }
+  .active-count {
+    font-size: 11px;
+    color: #6B7280;
+    text-align: right;
+  }
+  .active-count-num {
+    font-weight: 700;
+    color: #3B82F6;
+    font-size: 13px;
+  }
+  .active-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .btn-continue {
+    flex: 1;
+    background: #4A7FE5;
+    color: #FFFFFF;
+    border-radius: 14px;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-end {
+    width: 80px;
+    background: #FFFFFF;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    height: 40px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ========== Join 页 ========== */
+  .page-join {
+    padding: 0;
+    height: calc(100% - 54px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .join-navbar {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    z-index: 10;
+  }
+  .join-navbar-back {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 24px;
+    color: #111827;
+    font-weight: 400;
+  }
+  .join-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 32px 30px;
+    overflow-y: auto;
+  }
+  .join-icon-wrap {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 44px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 16px 40px rgba(74,127,229,0.35);
+  }
+  .join-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .poi-card-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #EFF6FF;
+    border: 1px solid #DBEAFE;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+  .poi-card-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .poi-card-icon svg {
+    width: 16px; height: 16px;
+    fill: none; stroke: #3B82F6; stroke-width: 2;
+  }
+  .poi-card-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1E40AF;
+  }
+  .poi-card-distance {
+    font-size: 12px;
+    color: #6B7280;
+    margin-left: auto;
+  }
+  .join-subtitle {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .invite-card {
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid #F3F4F6;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .invite-avatars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0 14px;
+  }
+  .invite-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    background: #EFF6FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: -8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .invite-avatar:first-child { margin-left: 0; }
+  .ia-1 { background: linear-gradient(135deg, #FFB347, #FF8C42); }
+  .ia-2 { background: linear-gradient(135deg, #F87171, #EF4444); }
+  .ia-3 { background: linear-gradient(135deg, #34D399, #10B981); }
+  .invite-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .invite-row:last-child { border-bottom: none; }
+  .invite-label {
+    font-size: 13px;
+    color: #9CA3AF;
+  }
+  .invite-name {
+    font-size: 13px;
+    color: #111827;
+    font-weight: 500;
+  }
+  .btn-primary.btn-join {
+    width: 100%;
+    height: 56px;
+    background: #4A7FE5;
+    color: #FFFFFF;
+    border-radius: 28px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 8px 24px rgba(74,127,229,0.3);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .join-footer {
+    font-size: 12px;
+    color: #9CA3AF;
+  }
+
+  /* ========== 地图页 ========== */
+  .page-map {
+    height: calc(100% - 54px);
+    position: relative;
+    overflow: hidden;
+    margin-top: -54px;
+  }
+  .map-canvas {
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 35% 40%, #E0F2FE 0%, transparent 40%),
+      radial-gradient(circle at 70% 65%, #DBEAFE 0%, transparent 35%),
+      linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
+    position: relative;
+  }
+  /* 模拟地图路网 */
+  .map-roads {
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    background-image: 
+      linear-gradient(90deg, transparent 48%, #CBD5E1 48%, #CBD5E1 52%, transparent 52%),
+      linear-gradient(0deg, transparent 20%, #CBD5E1 20%, #CBD5E1 22%, transparent 22%),
+      linear-gradient(45deg, transparent 60%, #E2E8F0 60%, #E2E8F0 64%, transparent 64%);
+  }
+  .map-block {
+    position: absolute;
+    background: rgba(255,255,255,0.4);
+    border-radius: 4px;
+  }
+  .mb1 { top: 18%; left: 12%; width: 60px; height: 40px; }
+  .mb2 { top: 50%; left: 55%; width: 80px; height: 50px; }
+  .mb3 { top: 70%; left: 15%; width: 70px; height: 40px; }
+  .mb4 { top: 25%; left: 65%; width: 50px; height: 60px; }
+  
+  /* 顶部 meet-bar */
+  .meet-bar {
+    position: absolute;
+    top: 70px;
+    left: 16px;
+    right: 100px;
+    height: 46px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border-radius: 23px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    z-index: 10;
+  }
+  .mb-back {
+    font-size: 24px;
+    color: #111827;
+    margin-right: 10px;
+  }
+  .mb-dot {
+    width: 8px;
+    height: 8px;
+    background: #10B981;
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+  }
+  .mb-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+  }
+  .mb-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(0,0,0,0.1);
+    margin: 0 12px;
+  }
+  .mb-users {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #4A7FE5;
+    font-weight: 700;
+  }
+  .mb-users svg { width: 16px; height: 16px; fill: #4A7FE5; }
+
+  /* 右侧工具栏 */
+  .toolbox {
+    position: absolute;
+    top: 130px;
+    right: 16px;
+    width: 52px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    z-index: 10;
+    overflow: hidden;
+  }
+  .tb-item {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .tb-item svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #3B82F6;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .tb-text {
+    font-size: 10px;
+    color: #555555;
+    font-weight: 500;
+  }
+  .tb-divider {
+    width: 32px;
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+    margin: 0 auto;
+  }
+
+  /* 地图上的 markers */
+  .map-markers {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+  .marker {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .marker-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .marker-pin {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #FFFFFF;
+    margin-top: -2px;
+  }
+  .mkr-me { top: 40%; left: 42%; }
+  .mkr-me .marker-avatar { background: linear-gradient(135deg, #60A5FA, #3B82F6); border-color: #3B82F6; border-width: 3px; }
+  .mkr-1 { top: 22%; left: 28%; }
+  .mkr-1 .marker-avatar { background: linear-gradient(135deg, #FFB347, #FF8C42); border-color: #10B981; }
+  .mkr-2 { top: 60%; left: 68%; }
+  .mkr-2 .marker-avatar { background: linear-gradient(135deg, #34D399, #10B981); border-color: #10B981; }
+  .mkr-3 { top: 72%; left: 30%; }
+  .mkr-3 .marker-avatar { background: linear-gradient(135deg, #F87171, #EF4444); border-color: #10B981; }
+  
+  /* 推荐碰头点 */
+  .recommend-marker {
+    position: absolute;
+    top: 45%;
+    left: 55%;
+    z-index: 6;
+  }
+  .rm-pulse {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(74,127,229,0.15);
+    border-radius: 50%;
+    top: -10px;
+    left: -10px;
+    animation: rmPulse 2s infinite;
+  }
+  @keyframes rmPulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+  .rm-core {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: #4A7FE5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #FFFFFF;
+    box-shadow: 0 4px 16px rgba(74,127,229,0.4);
+  }
+  .rm-core svg { width: 20px; height: 20px; fill: #FFFFFF; }
+
+  /* 底部碰面地点浮动卡片 */
+  .meet-card {
+    position: absolute;
+    bottom: 24px;
+    left: 16px;
+    right: 16px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    z-index: 10;
+  }
+  .mc-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+  }
+  .mc-icon svg { width: 18px; height: 18px; fill: #FFFFFF; }
+  .mc-info { flex: 1; }
+  .mc-label { font-size: 11px; color: #9CA3AF; }
+  .mc-name { font-size: 15px; font-weight: 700; color: #111827; }
+  .mc-arrow { font-size: 22px; color: #9CA3AF; font-weight: 300; }
+
+  /* ========== 添加好友面板 ========== */
+  .panel-screen {
+    height: calc(100% - 54px);
+    position: relative;
+    background: #F7F9FC;
+  }
+  .panel-map-bg {
+    height: 50%;
+    background: 
+      radial-gradient(circle at 35% 40%, #E0F2FE 0%, transparent 40%),
+      linear-gradient(180deg, #F0F9FF 0%, #E0F2FE 100%);
+    position: relative;
+  }
+  .panel-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+    padding: 12px 20px 30px;
+  }
+  .panel-handle {
+    width: 36px;
+    height: 4px;
+    background: #E5E7EB;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .panel-head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .panel-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .panel-close {
+    width: 28px;
+    height: 28px;
+    background: #F3F4F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    font-size: 16px;
+  }
+  
+  /* 蓝色邀请卡片 - 真实样式 */
+  .invite-section-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 8px 0 12px;
+    background: transparent;
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .invite-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+  }
+  .invite-icon-circle {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .invite-icon-plus {
+    font-size: 24px;
+    color: #FFFFFF;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .invite-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .invite-section-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.4;
+  }
+
+  /* 手动标记卡片 */
+  .manual-section {
+    background: #F9FAFB;
+    padding: 18px;
+    border-radius: 16px;
+    margin-top: 10px;
+  }
+  .manual-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+  .manual-input {
+    height: 44px;
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #9CA3AF;
+    margin-bottom: 10px;
+  }
+  .manual-input-group {
+    display: flex;
+    gap: 10px;
+  }
+  .manual-input-flex {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  .manual-search-btn {
+    width: 70px;
+    height: 44px;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ========== 推荐面板 ========== */
+  .recommend-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+    padding: 12px 20px 30px;
+    max-height: 60%;
+    overflow: hidden;
+  }
+  .type-tags {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .type-tag {
+    padding: 8px 16px;
+    background: #F3F4F6;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #6B7280;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .type-tag-active {
+    background: #3B82F6;
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .rec-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #F3F4F6;
+    gap: 12px;
+  }
+  .rec-rank {
+    width: 28px;
+    height: 28px;
+    background: #EFF6FF;
+    color: #3B82F6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .rec-rank.top1 { background: #FEF3C7; color: #D97706; }
+  .rec-info { flex: 1; min-width: 0; }
+  .rec-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+  .rec-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    color: #6B7280;
+    margin-bottom: 4px;
+  }
+  .rec-type {
+    padding: 2px 6px;
+    background: #F3F4F6;
+    border-radius: 4px;
+    color: #6B7280;
+  }
+  .rec-rating { color: #F59E0B; display: flex; align-items: center; gap: 2px; }
+  .rec-rating svg { width: 10px; height: 10px; fill: #F59E0B; }
+  .rec-dist { color: #3B82F6; font-weight: 600; }
+  .rec-addr {
+    font-size: 11px;
+    color: #9CA3AF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-set-meet {
+    padding: 6px 12px;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ========== 用户面板 ========== */
+  .user-panel-screen {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+    padding: 12px 20px 30px;
+  }
+  .up-close-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  .user-panel-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .up-avatar-wrap {
+    position: relative;
+  }
+  .up-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB347, #FF8C42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 26px;
+    font-weight: 700;
+    border: 3px solid #10B981;
+  }
+  .up-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: #10B981;
+    border-radius: 50%;
+    border: 3px solid #FFFFFF;
+  }
+  .up-info { flex: 1; }
+  .up-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .up-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .up-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .tag-blue { background: #EFF6FF; color: #1E40AF; }
+  .up-location {
+    font-size: 13px;
+    color: #6B7280;
+    margin-bottom: 4px;
+  }
+  .up-status-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .up-text-online { color: #10B981; font-weight: 600; }
+  .panel-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-green {
+    flex: 1;
+    background: #10B981;
+    color: #FFFFFF;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* ========== 流程图特殊元素 ========== */
+  .screen-label {
+    text-align: center;
+    margin-top: 30px;
+    padding: 0 20px;
+  }
+  .screen-label h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .screen-label p {
+    font-size: 15px;
+    color: #6B7280;
+    line-height: 1.5;
+  }
+  .screen-label .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  /* 连接箭头 */
+  .flow-arrow-row {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    gap: 60px;
+  }
+  .flow-arrow {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .flow-arrow-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #3B82F6, #DBEAFE);
+    position: relative;
+  }
+  .flow-arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border-left: 8px solid #DBEAFE;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  .flow-arrow-label {
+    background: #EFF6FF;
+    color: #1E40AF;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ========== Footer ========== */
+  .footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #9CA3AF;
+    font-size: 14px;
+  }
+
+  .no-print { }
+
+  /* 特殊标注样式 */
+  .annotation {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+</style>
+<script>
+  if (location.search.indexOf('noBtn') !== -1) {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('hide-btn');
+    });
+  }
+</script>
+</head>
+<body>
+
+<div class="canvas">
+
+  <!-- ========== 标题 ========== -->
+  <div class="title-hero">
+    <h1>约个地儿 · 高保真视觉稿</h1>
+    <div class="subtitle">Meet Point · Pixel-Perfect UI Mockup</div>
+    <div class="meta">
+      <span class="dot"></span>
+      <span>基于真实代码 · 1:1 还原 · iPhone 14 Pro (393×852)</span>
+    </div>
+  </div>
+
+  <!-- ========== 第一区：首页 ========== -->
+  <div class="section-divider">
+    <span class="tag">01</span>
+    <h2>首页（Index）</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="phones-row-2" style="grid-template-columns: 1fr 1fr;">
+
+    <!-- 首页：首次进入 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="page-index">
+            <div class="idx-header">
+              <div class="idx-logo">约</div>
+              <div class="idx-title">约个地儿</div>
+              <div class="idx-sub">多人实时位置 · 智能推荐碰头地点</div>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-item">
+                <div class="feature-icon-wrap">
+                  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                </div>
+                <div class="feature-texts">
+                  <div class="feature-title">一键发起碰头</div>
+                  <div class="feature-desc">无需注册登录，点击底部按钮即可极速创建碰头房间。</div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon-wrap">
+                  <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+                </div>
+                <div class="feature-texts">
+                  <div class="feature-title">微信邀请好友</div>
+                  <div class="feature-desc">将房间链接发送给微信好友，对方点击即可加入。</div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon-wrap">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <div class="feature-texts">
+                  <div class="feature-title">智能推荐地点</div>
+                  <div class="feature-desc">自动根据所有人的实时位置，计算并推荐最公平的中间点。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-anchor">
+            <button class="btn-launch">发起碰头</button>
+            <div class="bottom-text">点按钮先选个头像，好友才能在地图上看到你</div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">1</span>首次进入</h3>
+        <p>无头像无昵称时，展示产品特性介绍<br>底部按钮 = chooseAvatar 原生授权按钮</p>
+      </div>
+    </div>
+
+    <!-- 首页：已授权 + 进行中碰头 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="page-index">
+            <div class="idx-header">
+              <div class="idx-logo">约</div>
+              <div class="idx-title">约个地儿</div>
+              <div class="idx-sub">多人实时位置 · 智能推荐碰头地点</div>
+            </div>
+
+            <div class="section-title-small">我的信息</div>
+            <div class="profile-card">
+              <div class="avatar-container">
+                <div class="avatar-img">小</div>
+                <div class="edit-badge">
+                  <svg viewBox="0 0 24 24"><path fill="#3B82F6" d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/><path fill="#3B82F6" d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                </div>
+              </div>
+              <div class="input-box">小明</div>
+            </div>
+
+            <div class="section-title-small">进行中的碰头</div>
+            <div class="active-card">
+              <div class="status-tag">
+                <div class="pulse-dot"></div>
+                <span class="status-tag-text">进行中</span>
+              </div>
+              <div class="active-info">
+                <div style="flex:1;">
+                  <div class="active-detail-row">
+                    <span class="active-detail-label">发起人</span>
+                    <span class="active-detail-value">我</span>
+                  </div>
+                  <div class="active-detail-row">
+                    <span class="active-detail-label">碰面地点</span>
+                    <span class="active-detail-value">三里屯太古里</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="avatar-stack">
+                    <div class="stack-avatar sa-1">小</div>
+                    <div class="stack-avatar sa-2">李</div>
+                    <div class="stack-avatar sa-3">王</div>
+                    <div class="stack-avatar sa-4">张</div>
+                  </div>
+                  <div class="active-count"><span class="active-count-num">4</span> 人参与</div>
+                </div>
+              </div>
+              <div class="active-actions">
+                <button class="btn-continue">继续碰头</button>
+                <button class="btn-end">结束</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">2</span>进行中状态</h3>
+        <p>已授权展示「我的信息」卡片<br>有进行中碰头时展示彩条装饰卡片</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 第二区：地图页 ========== -->
+  <div class="section-divider">
+    <span class="tag">02</span>
+    <h2>地图页（Map）</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="phones-row">
+    <!-- 地图默认状态 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="page-map">
+            <div class="map-canvas">
+              <div class="map-roads"></div>
+              <div class="map-block mb1"></div>
+              <div class="map-block mb2"></div>
+              <div class="map-block mb3"></div>
+              <div class="map-block mb4"></div>
+              
+              <div class="meet-bar">
+                <span class="mb-back">‹</span>
+                <span class="mb-dot"></span>
+                <span class="mb-title">碰头中</span>
+                <div class="mb-divider"></div>
+                <div class="mb-users">
+                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                  <span>4</span>
+                </div>
+              </div>
+
+              <div class="toolbox">
+                <div class="tb-item">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 22s-8-10-8-14a8 8 0 1116 0c0 4-8 14-8 14z"/></svg>
+                  <span class="tb-text">定位</span>
+                </div>
+                <div class="tb-divider"></div>
+                <div class="tb-item">
+                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>
+                  <span class="tb-text">添加</span>
+                </div>
+                <div class="tb-divider"></div>
+                <div class="tb-item">
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <span class="tb-text">推荐</span>
+                </div>
+              </div>
+
+              <div class="map-markers">
+                <div class="marker mkr-me">
+                  <div class="marker-avatar">我</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="marker mkr-1">
+                  <div class="marker-avatar">小</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="marker mkr-2">
+                  <div class="marker-avatar">李</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="marker mkr-3">
+                  <div class="marker-avatar">王</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="recommend-marker">
+                  <div class="rm-pulse"></div>
+                  <div class="rm-core">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="meet-card">
+                <div class="mc-icon">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 22s-8-10-8-14a8 8 0 1116 0c0 4-8 14-8 14z"/></svg>
+                </div>
+                <div class="mc-info">
+                  <div class="mc-label">碰头地点</div>
+                  <div class="mc-name">三里屯太古里</div>
+                </div>
+                <span class="mc-arrow">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">3</span>地图主视图</h3>
+        <p>4人实时位置 + 蓝色推荐碰头点<br>顶部药丸状态栏 + 右侧悬浮工具栏</p>
+      </div>
+    </div>
+
+    <!-- 添加好友面板 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="panel-screen">
+            <div class="panel-map-bg">
+              <div class="map-roads" style="opacity:0.3;"></div>
+              <div class="map-block mb1" style="top:30%;"></div>
+              <div class="map-block mb2" style="top:15%;left:65%;"></div>
+              <div class="map-markers" style="height:50%;">
+                <div class="marker mkr-me" style="top:40%;left:45%;">
+                  <div class="marker-avatar">我</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="marker mkr-1" style="top:25%;left:30%;">
+                  <div class="marker-avatar">小</div>
+                  <div class="marker-pin"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-overlay">
+              <div class="panel-handle"></div>
+              <div class="panel-head-row">
+                <span class="panel-title">添加好友</span>
+                <div class="panel-close">×</div>
+              </div>
+
+              <div class="invite-section-btn">
+                <div class="invite-section">
+                  <div class="invite-icon-circle">
+                    <span class="invite-icon-plus">+</span>
+                  </div>
+                  <div>
+                    <div class="invite-section-title">邀请好友加入碰头</div>
+                    <div class="invite-section-desc">分享给好友，TA 点击即可加入碰头</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="manual-section">
+                <div class="manual-section-title">手动标记好友位置</div>
+                <div class="manual-input">输入好友昵称</div>
+                <div class="manual-input-group">
+                  <div class="manual-input manual-input-flex">搜索地点或地图点选</div>
+                  <div class="manual-search-btn">搜索</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">4</span>添加好友面板</h3>
+        <p>蓝色强调主 CTA（邀请分享）<br>浅灰次级区（手动标记位置）</p>
+      </div>
+    </div>
+
+    <!-- 推荐地点面板 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="panel-screen">
+            <div class="panel-map-bg" style="height:40%;">
+              <div class="map-roads" style="opacity:0.3;"></div>
+              <div class="map-markers" style="height:40%;">
+                <div class="marker mkr-me" style="top:45%;left:45%;">
+                  <div class="marker-avatar">我</div>
+                  <div class="marker-pin"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="recommend-panel" style="max-height:60%;">
+              <div class="panel-handle"></div>
+              <div class="panel-head-row">
+                <span class="panel-title">推荐碰头地点</span>
+                <div class="panel-close">×</div>
+              </div>
+              <div class="type-tags">
+                <div class="type-tag type-tag-active">全部</div>
+                <div class="type-tag">🍴 餐厅</div>
+                <div class="type-tag">☕ 咖啡</div>
+                <div class="type-tag">🛍 商场</div>
+                <div class="type-tag">🌳 公园</div>
+              </div>
+
+              <div class="rec-item">
+                <div class="rec-rank top1">1</div>
+                <div class="rec-info">
+                  <div class="rec-name">星巴克 · 三里屯店</div>
+                  <div class="rec-meta">
+                    <span class="rec-type">咖啡</span>
+                    <span class="rec-rating">
+                      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      4.6
+                    </span>
+                    <span class="rec-dist">500m</span>
+                  </div>
+                  <div class="rec-addr">朝阳区工体北路太古里南区 S8-31</div>
+                </div>
+                <div class="btn-set-meet">选为碰头点</div>
+              </div>
+
+              <div class="rec-item">
+                <div class="rec-rank">2</div>
+                <div class="rec-info">
+                  <div class="rec-name">肯德基（朝阳大悦城店）</div>
+                  <div class="rec-meta">
+                    <span class="rec-type">餐厅</span>
+                    <span class="rec-rating">
+                      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      4.3
+                    </span>
+                    <span class="rec-dist">800m</span>
+                  </div>
+                  <div class="rec-addr">朝阳区朝阳北路101号朝阳大悦城</div>
+                </div>
+                <div class="btn-set-meet">选为碰头点</div>
+              </div>
+
+              <div class="rec-item">
+                <div class="rec-rank">3</div>
+                <div class="rec-info">
+                  <div class="rec-name">Manner Coffee</div>
+                  <div class="rec-meta">
+                    <span class="rec-type">咖啡</span>
+                    <span class="rec-rating">
+                      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      4.8
+                    </span>
+                    <span class="rec-dist">1.2km</span>
+                  </div>
+                  <div class="rec-addr">朝阳区工体北路甲 2 号</div>
+                </div>
+                <div class="btn-set-meet">选为碰头点</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">5</span>推荐地点面板</h3>
+        <p>横向类型筛选 + 排名列表<br>评分 / 距离 / 一键选为碰头点</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 第三区：Join 页 + 成员面板 ========== -->
+  <div class="section-divider">
+    <span class="tag">03</span>
+    <h2>Join 页（被邀请） + 成员面板</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="phones-row-2">
+
+    <!-- Join 页 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="page-join">
+            <div class="join-navbar">
+              <div class="join-navbar-back">‹</div>
+            </div>
+            <div class="join-center">
+              <div class="join-icon-wrap">碰</div>
+              <div class="join-title">小明邀请你碰头</div>
+              <div class="poi-card-mini">
+                <svg class="poi-card-icon" viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 22s-8-10-8-14a8 8 0 1116 0c0 4-8 14-8 14z"/></svg>
+                <span class="poi-card-name">三里屯太古里</span>
+                <span class="poi-card-distance">距你3km</span>
+              </div>
+              <div class="join-subtitle">路线已规划好，一键导航</div>
+
+              <div class="invite-card">
+                <div class="invite-avatars">
+                  <div class="invite-avatar ia-1">小</div>
+                  <div class="invite-avatar ia-2">李</div>
+                  <div class="invite-avatar ia-3">王</div>
+                </div>
+                <div class="invite-row">
+                  <span class="invite-label">发起人</span>
+                  <span class="invite-name">小明</span>
+                </div>
+                <div class="invite-row">
+                  <span class="invite-label">已参与</span>
+                  <span class="invite-name">3人</span>
+                </div>
+                <div class="invite-row">
+                  <span class="invite-label">发起时间</span>
+                  <span class="invite-name">10分钟前</span>
+                </div>
+              </div>
+
+              <button class="btn-primary btn-join">加入碰头</button>
+              <div class="join-footer">加入后需授权定位开启位置共享</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">6</span>加入页（Join）</h3>
+        <p>动态标题「{发起人}邀请你碰头」<br>地点卡片 + 参与人头像组 + 时间信息</p>
+      </div>
+    </div>
+
+    <!-- 成员详情面板 -->
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="icons">📶 🔋</span>
+          </div>
+          <div class="panel-screen">
+            <div class="panel-map-bg" style="height:60%;">
+              <div class="map-roads" style="opacity:0.3;"></div>
+              <div class="map-block mb1" style="top:30%;"></div>
+              <div class="map-block mb2" style="top:15%;left:65%;"></div>
+              <div class="map-markers" style="height:60%;">
+                <div class="marker mkr-me" style="top:30%;left:45%;">
+                  <div class="marker-avatar">我</div>
+                  <div class="marker-pin"></div>
+                </div>
+                <div class="marker" style="top:50%;left:30%;">
+                  <div class="marker-avatar" style="background:linear-gradient(135deg, #FFB347, #FF8C42); border-color:#10B981;">小</div>
+                  <div class="marker-pin"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="user-panel-screen">
+              <div class="up-close-row">
+                <div class="panel-close">×</div>
+              </div>
+
+              <div class="user-panel-content">
+                <div class="up-avatar-wrap">
+                  <div class="up-avatar">小</div>
+                  <div class="up-status-dot"></div>
+                </div>
+                <div class="up-info">
+                  <div class="up-name-row">
+                    <span class="up-name">小明</span>
+                    <span class="up-tag tag-blue">自己</span>
+                  </div>
+                  <div class="up-location">📍 北京市朝阳区工体北路</div>
+                  <div class="up-status-row">
+                    <span class="up-text-online">● 在线</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-actions">
+                <button class="btn-green">
+                  <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#FFFFFF;"><path d="M12 2l-5.5 9h11L12 2zm0 14c-3.31 0-6-2.69-6-6h2c0 2.21 1.79 4 4 4s4-1.79 4-4h2c0 3.31-2.69 6-6 6z"/></svg>
+                  导航到 TA
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">
+        <h3><span class="num">7</span>成员详情面板</h3>
+        <p>点击地图人物 Marker 弹出<br>在线状态 + 位置信息 + 一键导航</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Footer ========== -->
+  <div class="footer">
+    <div>约个地儿 MeetPoint · 2026 · 高保真视觉稿</div>
+    <div>基于真实代码 · 精确还原生产环境</div>
+  </div>
+
+</div>
+
+</body>
+</html>
